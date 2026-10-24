@@ -1,0 +1,80 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["react", "typescript", "oxc", "import"],
+  "categories": { "correctness": "error" },
+  "rules": {
+    "react/rules-of-hooks": "error",
+    "react/only-export-components": ["warn", { "allowConstantExport": true }],
+    "typescript/no-explicit-any": "error",
+    "typescript/no-non-null-assertion": "error",
+    "import/no-default-export": "error",
+    "no-restricted-imports": [
+      "error",
+      { "patterns": [{ "group": ["../*"], "message": "폴더 밖은 @/ 경로로 import" }] }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["*.config.ts"],
+      "rules": { "import/no-default-export": "off" }
+    },
+    {
+      "files": [
+        "src/components/**",
+        "src/hooks/**",
+        "src/lib/**",
+        "src/types/**",
+        "src/config/**",
+        "src/utils/**"
+      ],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              { "group": ["../*"], "message": "폴더 밖은 @/ 경로로 import" },
+              {
+                "group": ["@/features/**", "@/app/**"],
+                "message": "공용 코드는 기능·앱을 import하지 않음"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/features/book-search/**"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              { "group": ["../*"], "message": "폴더 밖은 @/ 경로로 import" },
+              {
+                "group": ["@/features/wishlist/**", "@/app/**"],
+                "message": "기능 간 import 금지 — app/routes에서 조립"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/features/wishlist/**"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              { "group": ["../*"], "message": "폴더 밖은 @/ 경로로 import" },
+              {
+                "group": ["@/features/book-search/**", "@/app/**"],
+                "message": "기능 간 import 금지 — app/routes에서 조립"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
