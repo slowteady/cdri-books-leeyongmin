@@ -1,7 +1,7 @@
 import { cn } from '@/utils/cn'
 
 const BASE_CLASS_NAME =
-  'inline-flex shrink-0 cursor-pointer items-center justify-center gap-2.5 rounded-lg disabled:cursor-not-allowed disabled:opacity-50'
+  'inline-flex shrink-0 cursor-pointer items-center justify-center rounded-lg whitespace-nowrap disabled:cursor-not-allowed disabled:opacity-50'
 
 const VARIANT_CLASS_NAMES = {
   primary: 'bg-primary text-white',
@@ -10,9 +10,9 @@ const VARIANT_CLASS_NAMES = {
 } as const
 
 const SIZE_CLASS_NAMES = {
-  lg: 'h-12 px-5 text-caption',
-  md: 'h-9 px-2.5 text-body2 leading-5.5',
-  sm: 'h-8.75 px-2.5 text-body2',
+  lg: 'h-12 gap-1.25 px-5 text-caption',
+  md: 'h-9 gap-2.5 px-2.5 text-body2 leading-5.5',
+  sm: 'h-8.75 gap-2.5 px-2.5 text-body2',
 } as const
 
 export type ButtonVariant = keyof typeof VARIANT_CLASS_NAMES
