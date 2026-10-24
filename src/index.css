@@ -1,1 +1,62 @@
 @import 'tailwindcss';
+
+@theme {
+  --color-*: initial;
+
+  --color-primary: #4880ee;
+  --color-red: #e84118;
+  --color-gray: #dadada;
+  --color-light-gray: #f2f4f6;
+  --color-white: #ffffff;
+  --color-black: #222222;
+
+  --color-fg-primary: #353c49;
+  --color-fg-secondary: #6d7582;
+  --color-fg-subtitle: #8d94a0;
+
+  --color-fg-title: #1a1e27;
+  --color-ui-gray: #b1b8c0;
+  --color-divider: #d2d6da;
+
+  --font-sans: 'Noto Sans KR Variable', sans-serif;
+  --font-weight-demilight: 350;
+
+  --text-title1: 1.5rem;
+  --text-title1--line-height: 1.5rem;
+  --text-title1--font-weight: 700;
+  --text-title2: 1.375rem;
+  --text-title2--line-height: 1.5rem;
+  --text-title2--font-weight: 700;
+  --text-title3: 1.125rem;
+  --text-title3--line-height: 1.125rem;
+  --text-title3--font-weight: 700;
+  --text-body1: 1.25rem;
+  --text-body1--line-height: 1.25rem;
+  --text-body1--font-weight: 500;
+  --text-body2: 0.875rem;
+  --text-body2--line-height: 0.875rem;
+  --text-body2--font-weight: 500;
+  --text-caption: 1rem;
+  --text-caption--line-height: 1rem;
+  --text-caption--font-weight: 500;
+  --text-small: 0.625rem;
+  --text-small--line-height: 0.625rem;
+  --text-small--font-weight: 500;
+
+  --container-content: 60rem;
+
+  --shadow-popover: 0 4px 14px rgb(151 151 151 / 0.15);
+  --shadow-dropdown: 0 0 4px rgb(0 0 0 / 0.25);
+}
+
+@layer base {
+  body {
+    background-color: var(--color-white);
+    color: var(--color-fg-primary);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+}
