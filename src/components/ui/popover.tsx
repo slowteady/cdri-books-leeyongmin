@@ -63,7 +63,7 @@ export function Popover({
           id={panelId}
           role="dialog"
           aria-label={label}
-          className="absolute top-full right-0 z-20 mt-3.75 w-popover rounded-lg bg-white px-6 py-9 shadow-popover sm:right-auto sm:left-1/2 sm:-translate-x-1/2"
+          className="absolute top-full right-0 z-20 mt-3.75 w-popover rounded-lg bg-white px-6 py-9 shadow-popover lg:right-auto lg:left-1/2 lg:-translate-x-1/2"
         >
           {children}
           <IconButton
