@@ -211,7 +211,7 @@ type PriceRowProps = {
 function PriceRow({ label, children }: PriceRowProps) {
   return (
     <p className="flex items-center gap-2">
-      <span className="w-9.25 text-right text-small leading-5.5 text-fg-subtitle">{label}</span>
+      <span className="h-5 w-9.25 text-right text-small leading-5.5 text-fg-subtitle">{label}</span>
       {children}
     </p>
   )
