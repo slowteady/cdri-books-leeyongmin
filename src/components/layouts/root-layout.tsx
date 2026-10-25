@@ -4,7 +4,7 @@ export function RootLayout() {
   return (
     <>
       <Header />
-      <main className="mx-auto box-content max-w-content px-4 pt-20 pb-20">
+      <main className="mx-auto box-content max-w-content px-4 pt-10 pb-20 lg:pt-20">
         <Outlet />
       </main>
     </>
@@ -16,9 +16,9 @@ const NAVIGATION_TAB_CLASS_NAME =
 
 function Header() {
   return (
-    <header className="flex h-20 items-center bg-white px-4 lg:px-40">
+    <header className="flex flex-col items-start gap-3 bg-white px-4 py-4 sm:h-20 sm:flex-row sm:items-center sm:gap-0 sm:py-0 lg:px-40">
       <p className="text-title1 text-fg-primary">CERTICOS BOOKS</p>
-      <nav aria-label="주요 메뉴" className="ml-6 flex gap-6 lg:ml-100 lg:gap-14">
+      <nav aria-label="주요 메뉴" className="flex gap-6 sm:ml-10 lg:ml-100 lg:gap-14">
         <NavLink to="/" className={NAVIGATION_TAB_CLASS_NAME}>
           도서 검색
         </NavLink>

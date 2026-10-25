@@ -3,8 +3,14 @@ import { useId, useState, type ReactNode } from 'react'
 import { buttonStyles } from '@/components/ui/button-styles'
 import { Icon } from '@/components/ui/icon'
 import type { Book } from '@/types/book'
+import { cn } from '@/utils/cn'
 
 import { formatPrice, getDisplayPrice, toLargeThumbnailUrl } from './book-format'
+
+const ITEM_MOBILE_LAYOUT = 'group flex flex-wrap items-start gap-4 border-b border-divider py-4'
+const ITEM_DESKTOP_LAYOUT = 'lg:flex-nowrap lg:items-center lg:gap-0 lg:pr-4 lg:pl-12'
+const ITEM_DESKTOP_EXPANDED_LAYOUT =
+  'lg:data-expanded:items-stretch lg:data-expanded:pt-6 lg:data-expanded:pb-10 lg:data-expanded:pl-13.5'
 
 type BookListItemProps = {
   book: Book
@@ -27,7 +33,7 @@ export function BookListItem({
     <article
       aria-labelledby={titleId}
       data-expanded={isExpanded || undefined}
-      className="group flex items-center border-b border-divider py-4 pr-4 pl-12 data-expanded:items-stretch data-expanded:pt-6 data-expanded:pb-10 data-expanded:pl-13.5"
+      className={cn(ITEM_MOBILE_LAYOUT, ITEM_DESKTOP_LAYOUT, ITEM_DESKTOP_EXPANDED_LAYOUT)}
     >
       <BookThumbnail book={book} isExpanded={isExpanded} wishlistSlot={wishlistSlot} />
       <BookSummary
@@ -62,7 +68,7 @@ function BookThumbnail({ book, isExpanded, wishlistSlot }: BookThumbnailProps) {
   }
 
   return (
-    <div className="relative h-17 w-12 shrink-0 group-data-expanded:h-70 group-data-expanded:w-52.5">
+    <div className="relative h-17 w-12 shrink-0 group-data-expanded:h-34 group-data-expanded:w-24 lg:group-data-expanded:h-70 lg:group-data-expanded:w-52.5">
       {thumbnailUrl ? (
         <img
           src={thumbnailUrl}
@@ -77,7 +83,7 @@ function BookThumbnail({ book, isExpanded, wishlistSlot }: BookThumbnailProps) {
       ) : (
         <div className="size-full bg-light-gray" />
       )}
-      <div className="absolute top-0 right-0 group-data-expanded:top-2 group-data-expanded:right-2">
+      <div className="absolute top-0 right-0 lg:group-data-expanded:top-2 lg:group-data-expanded:right-2">
         {wishlistSlot}
       </div>
     </div>
@@ -98,16 +104,16 @@ type BookSummaryProps = {
 
 function BookSummary({ book, isExpanded, titleId, descriptionId }: BookSummaryProps) {
   return (
-    <div className="ml-12 min-w-0 flex-1 group-data-expanded:ml-8 group-data-expanded:pt-5">
-      <div className="flex min-w-0 items-center gap-4">
+    <div className="min-w-0 flex-1 lg:ml-12 lg:group-data-expanded:ml-8 lg:group-data-expanded:pt-5">
+      <div className="flex min-w-0 flex-col items-start gap-1 lg:flex-row lg:items-center lg:gap-4">
         <h3
           id={titleId}
-          className="truncate text-title3 text-fg-primary group-data-expanded:leading-6.5 group-data-expanded:whitespace-normal"
+          className="text-title3 leading-6.5 text-fg-primary lg:truncate lg:leading-4.5 lg:group-data-expanded:leading-6.5 lg:group-data-expanded:whitespace-normal"
         >
           {book.title}
         </h3>
         {book.authors.length > 0 && (
-          <p className="shrink-0 text-body2 text-fg-secondary group-data-expanded:leading-5.5 group-data-expanded:text-fg-subtitle">
+          <p className="text-body2 text-fg-secondary group-data-expanded:leading-5.5 group-data-expanded:text-fg-subtitle lg:shrink-0">
             {book.authors.join(', ')}
           </p>
         )}
@@ -116,7 +122,7 @@ function BookSummary({ book, isExpanded, titleId, descriptionId }: BookSummaryPr
         id={descriptionId}
         hidden={!isExpanded}
         aria-label="책 소개"
-        className="mt-4 max-w-90"
+        className="mt-4 lg:max-w-90"
       >
         <h4 className="text-body2 leading-6.5 font-bold text-fg-primary">책 소개</h4>
         <p className="mt-3 text-small leading-4 whitespace-pre-line text-fg-primary">
@@ -138,11 +144,11 @@ function BookActions({ book, isExpanded, descriptionId, onToggleExpanded }: Book
   const hasDiscount = book.salePrice !== null
 
   return (
-    <div className="ml-6 flex shrink-0 items-center group-data-expanded:flex-col group-data-expanded:items-end">
-      <p className="mr-14 text-title3 text-fg-primary group-data-expanded:hidden">
+    <div className="flex basis-full flex-wrap items-center gap-2 lg:ml-6 lg:basis-auto lg:flex-nowrap lg:gap-0 lg:group-data-expanded:flex-col lg:group-data-expanded:items-end">
+      <p className="basis-full text-title3 text-fg-primary group-data-expanded:hidden lg:mr-14 lg:basis-auto">
         {formatPrice(getDisplayPrice(book))}
       </p>
-      <div className="hidden flex-col items-end gap-2 group-data-expanded:mt-auto group-data-expanded:flex">
+      <div className="hidden basis-full flex-col items-start gap-2 group-data-expanded:flex lg:basis-auto lg:items-end lg:group-data-expanded:mt-auto">
         <PriceRow label="원가">
           <OriginalPrice price={book.originalPrice} hasDiscount={hasDiscount} />
         </PriceRow>
@@ -159,7 +165,8 @@ function BookActions({ book, isExpanded, descriptionId, onToggleExpanded }: Book
         target="_blank"
         rel="noopener noreferrer"
         className={buttonStyles({
-          className: 'w-28.75 group-data-expanded:mt-7 group-data-expanded:w-60',
+          className:
+            'flex-1 lg:w-28.75 lg:flex-none lg:group-data-expanded:mt-7 lg:group-data-expanded:w-60',
         })}
       >
         구매하기
@@ -172,7 +179,7 @@ function BookActions({ book, isExpanded, descriptionId, onToggleExpanded }: Book
         className={buttonStyles({
           variant: 'secondary',
           className:
-            'ml-2 w-28.75 gap-1.5 px-0 group-data-expanded:order-first group-data-expanded:ml-0',
+            'flex-1 lg:ml-2 lg:w-28.75 lg:flex-none lg:group-data-expanded:order-first lg:group-data-expanded:ml-0',
         })}
       >
         상세보기
