@@ -18,11 +18,10 @@ type SearchResultsProps = {
 
 export function SearchResults({ searchMode, renderWishlistButton }: SearchResultsProps) {
   const searchResultsView = useSearchResults(searchMode)
-  const totalCount = searchResultsView.status === 'success' ? searchResultsView.totalCount : 0
 
   return (
     <section aria-label="검색 결과" className="mt-6">
-      <ResultCount label="도서 검색 결과" count={totalCount} />
+      <ResultCount label="도서 검색 결과" count={getResultCount(searchResultsView)} />
       <div className="mt-9">
         <SearchResultsBody
           searchResultsView={searchResultsView}
@@ -31,6 +30,11 @@ export function SearchResults({ searchMode, renderWishlistButton }: SearchResult
       </div>
     </section>
   )
+}
+
+function getResultCount(searchResultsView: SearchResultsView) {
+  if (searchResultsView.status === 'loading') return null
+  return searchResultsView.status === 'success' ? searchResultsView.totalCount : 0
 }
 
 type SearchResultsBodyProps = {

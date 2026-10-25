@@ -61,6 +61,30 @@ describe('도서 검색 결과', () => {
     expect(screen.queryByText('검색된 결과가 없습니다.')).not.toBeInTheDocument()
   })
 
+  test('검색하는 동안에는 결과 건수를 0건으로 알리지 않는다', async () => {
+    mockFetch(() => new Promise<Response>(() => {}))
+
+    renderApp('/?q=테스트')
+
+    await screen.findByRole('status', { name: '검색 결과 불러오는 중' })
+    expect(screen.getByText('도서 검색 결과').parentElement).not.toHaveTextContent('0건')
+  })
+
+  test('다시 시도를 누르면 응답이 올 때까지 에러 안내 대신 불러오는 중임을 알린다', async () => {
+    let requestCount = 0
+    mockFetch(() => {
+      requestCount += 1
+      if (requestCount === 1) return new Response(null, { status: 503 })
+      return new Promise<Response>(() => {})
+    })
+    const { user } = renderApp('/?q=테스트')
+
+    await user.click(await screen.findByRole('button', { name: '다시 시도' }))
+
+    expect(await screen.findByRole('status', { name: '검색 결과 불러오는 중' })).toBeInTheDocument()
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+  })
+
   test('검색이 일시적으로 실패하면 안내와 다시 시도 버튼을 보여주고, 다시 시도하면 결과를 보여준다', async () => {
     let requestCount = 0
     mockFetch((requestUrl) => {
