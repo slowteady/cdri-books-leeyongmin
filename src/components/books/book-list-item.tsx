@@ -15,15 +15,15 @@ const ITEM_DESKTOP_EXPANDED_LAYOUT =
 type BookListItemProps = {
   book: Book
   isExpanded: boolean
-  onToggleExpanded: () => void
-  wishlistSlot: ReactNode
+  onToggleExpanded: (bookId: string) => void
+  renderWishlistButton: (book: Book) => ReactNode
 }
 
 export function BookListItem({
   book,
   isExpanded,
   onToggleExpanded,
-  wishlistSlot,
+  renderWishlistButton,
 }: BookListItemProps) {
   const elementId = useId()
   const titleId = `${elementId}-title`
@@ -35,7 +35,11 @@ export function BookListItem({
       data-expanded={isExpanded || undefined}
       className={cn(ITEM_MOBILE_LAYOUT, ITEM_DESKTOP_LAYOUT, ITEM_DESKTOP_EXPANDED_LAYOUT)}
     >
-      <BookThumbnail book={book} isExpanded={isExpanded} wishlistSlot={wishlistSlot} />
+      <BookThumbnail
+        book={book}
+        isExpanded={isExpanded}
+        wishlistButton={renderWishlistButton(book)}
+      />
       <BookSummary
         book={book}
         isExpanded={isExpanded}
@@ -46,7 +50,7 @@ export function BookListItem({
         book={book}
         isExpanded={isExpanded}
         descriptionId={descriptionId}
-        onToggleExpanded={onToggleExpanded}
+        onToggleExpanded={() => onToggleExpanded(book.id)}
       />
     </article>
   )
@@ -55,10 +59,10 @@ export function BookListItem({
 type BookThumbnailProps = {
   book: Book
   isExpanded: boolean
-  wishlistSlot: ReactNode
+  wishlistButton: ReactNode
 }
 
-function BookThumbnail({ book, isExpanded, wishlistSlot }: BookThumbnailProps) {
+function BookThumbnail({ book, isExpanded, wishlistButton }: BookThumbnailProps) {
   const [failedThumbnailUrls, setFailedThumbnailUrls] = useState<string[]>([])
   const thumbnailUrlCandidates = getThumbnailUrlCandidates(book.thumbnailUrl, isExpanded)
   const thumbnailUrl = thumbnailUrlCandidates.find((url) => !failedThumbnailUrls.includes(url))
@@ -84,7 +88,7 @@ function BookThumbnail({ book, isExpanded, wishlistSlot }: BookThumbnailProps) {
         <div className="size-full bg-light-gray" />
       )}
       <div className="absolute top-0 right-0 lg:group-data-expanded:top-2 lg:group-data-expanded:right-2">
-        {wishlistSlot}
+        {wishlistButton}
       </div>
     </div>
   )

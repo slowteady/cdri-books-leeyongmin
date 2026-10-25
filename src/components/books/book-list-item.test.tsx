@@ -8,15 +8,15 @@ import { BookListItem } from './book-list-item'
 
 function renderBookListItem({ book = createBook(), isExpanded = false } = {}) {
   const handleToggleExpanded = vi.fn()
-  render(
+  const { container } = render(
     <BookListItem
       book={book}
       isExpanded={isExpanded}
       onToggleExpanded={handleToggleExpanded}
-      wishlistSlot={<button type="button">찜하기</button>}
+      renderWishlistButton={() => <button type="button">찜하기</button>}
     />,
   )
-  return { handleToggleExpanded }
+  return { container, handleToggleExpanded }
 }
 
 function renderExpanded(overrides: Partial<Book>) {
@@ -59,7 +59,7 @@ describe('BookListItem', () => {
 
     expect(toggleButton).toHaveAttribute('aria-expanded', 'false')
     expect(descriptionRegion).not.toBeVisible()
-    expect(handleToggleExpanded).toHaveBeenCalledOnce()
+    expect(handleToggleExpanded).toHaveBeenCalledExactlyOnceWith(createBook().id)
   })
 
   test('펼치면 책 소개와 원가, 할인가를 보여준다', () => {
@@ -89,14 +89,7 @@ describe('BookListItem', () => {
   })
 
   test('펼친 큰 썸네일을 불러오지 못하면 원래 썸네일로 바꾼다', () => {
-    const { container } = render(
-      <BookListItem
-        book={createBook()}
-        isExpanded
-        onToggleExpanded={vi.fn()}
-        wishlistSlot={null}
-      />,
-    )
+    const { container } = renderBookListItem({ isExpanded: true })
 
     fireEvent.error(getThumbnail(container))
 
@@ -104,14 +97,7 @@ describe('BookListItem', () => {
   })
 
   test('썸네일을 불러오지 못하면 빈 표지를 보여준다', () => {
-    const { container } = render(
-      <BookListItem
-        book={createBook()}
-        isExpanded={false}
-        onToggleExpanded={vi.fn()}
-        wishlistSlot={null}
-      />,
-    )
+    const { container } = renderBookListItem()
 
     fireEvent.error(getThumbnail(container))
 

@@ -38,8 +38,8 @@ export function BookList({
             <BookListItem
               book={book}
               isExpanded={expandedBookId === book.id}
-              onToggleExpanded={() => toggleExpandedBook(book.id)}
-              wishlistSlot={renderWishlistButton(book)}
+              onToggleExpanded={toggleExpandedBook}
+              renderWishlistButton={renderWishlistButton}
             />
           </li>
         ))}
