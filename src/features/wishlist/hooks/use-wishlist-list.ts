@@ -7,7 +7,7 @@ export function useWishlistList() {
   const wishedBooks = useWishedBooks()
   const [visibleCount, setVisibleCount] = useState(WISHLIST_PAGE_SIZE)
   const wishlistButtonsRef = useRef(new Map<string, HTMLButtonElement>())
-  const wishlistSectionRef = useRef<HTMLElement>(null)
+  const wishlistSectionRef = useRef<HTMLElement | null>(null)
   const visibleBooks = wishedBooks.slice(0, visibleCount)
 
   const registerWishlistButton = (bookId: string) => (button: HTMLButtonElement | null) => {
@@ -16,6 +16,10 @@ export function useWishlistList() {
     return () => {
       wishlistButtonsRef.current.delete(bookId)
     }
+  }
+
+  const registerWishlistSection = (section: HTMLElement | null) => {
+    wishlistSectionRef.current = section
   }
 
   const moveFocusAfterRemoval = (removedBookId: string) => {
@@ -34,7 +38,7 @@ export function useWishlistList() {
     totalCount: wishedBooks.length,
     hasMore: visibleCount < wishedBooks.length,
     loadMore: () => setVisibleCount((count) => count + WISHLIST_PAGE_SIZE),
-    wishlistSectionRef,
+    registerWishlistSection,
     registerWishlistButton,
     moveFocusAfterRemoval,
   }

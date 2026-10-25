@@ -6,33 +6,41 @@ import { useWishlistList } from '@/features/wishlist/hooks/use-wishlist-list'
 import { WishlistButton } from './wishlist-button'
 
 export function WishlistList() {
-  const wishlistList = useWishlistList()
+  const {
+    books,
+    totalCount,
+    hasMore,
+    loadMore,
+    registerWishlistSection,
+    registerWishlistButton,
+    moveFocusAfterRemoval,
+  } = useWishlistList()
 
   return (
     <section
-      ref={wishlistList.wishlistSectionRef}
+      ref={registerWishlistSection}
       aria-label="찜한 책 목록"
       tabIndex={-1}
       className="mt-5 outline-none"
     >
-      <ResultCount label="찜한 책" count={wishlistList.totalCount} />
+      <ResultCount label="찜한 책" count={totalCount} />
       <div className="mt-9">
-        {wishlistList.totalCount === 0 ? (
+        {totalCount === 0 ? (
           <EmptyState message="찜한 책이 없습니다." />
         ) : (
           <BookList
-            books={wishlistList.books}
+            books={books}
             renderWishlistButton={(book) => (
               <WishlistButton
                 book={book}
-                ref={wishlistList.registerWishlistButton(book.id)}
-                onUnwish={() => wishlistList.moveFocusAfterRemoval(book.id)}
+                ref={registerWishlistButton(book.id)}
+                onUnwish={() => moveFocusAfterRemoval(book.id)}
               />
             )}
-            hasMore={wishlistList.hasMore}
+            hasMore={hasMore}
             isLoadingMore={false}
             hasLoadMoreFailed={false}
-            onLoadMore={wishlistList.loadMore}
+            onLoadMore={loadMore}
           />
         )}
       </div>
