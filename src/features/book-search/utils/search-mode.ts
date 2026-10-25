@@ -2,6 +2,12 @@ export const SEARCH_TARGETS = ['title', 'person', 'publisher'] as const
 
 export type SearchTarget = (typeof SEARCH_TARGETS)[number]
 
+export const SEARCH_TARGET_LABELS: Record<SearchTarget, string> = {
+  title: '제목',
+  person: '저자명',
+  publisher: '출판사',
+}
+
 export type SearchMode =
   | { type: 'idle' }
   | { type: 'all'; query: string }

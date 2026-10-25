@@ -1,10 +1,24 @@
 import { useSearchParams } from 'react-router'
 
-import { parseSearchMode } from '@/features/book-search/utils/search-mode'
+import {
+  toHistoryEntry,
+  useSearchHistoryActions,
+} from '@/features/book-search/stores/search-history-store'
+import {
+  parseSearchMode,
+  toSearchParams,
+  type ActiveSearchMode,
+} from '@/features/book-search/utils/search-mode'
 
 export function useSearchNavigation() {
-  const [searchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const { addHistoryEntry } = useSearchHistoryActions()
   const searchMode = parseSearchMode(searchParams)
 
-  return { searchMode }
+  const search = (nextSearchMode: ActiveSearchMode) => {
+    addHistoryEntry(toHistoryEntry(nextSearchMode))
+    setSearchParams(toSearchParams(nextSearchMode))
+  }
+
+  return { searchMode, search }
 }
