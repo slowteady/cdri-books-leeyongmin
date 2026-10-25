@@ -2,7 +2,7 @@ import type { Ref } from 'react'
 
 import { Icon } from '@/components/ui/icon'
 import type { IconName } from '@/components/ui/icon-paths'
-import { useIsWishedBook, useWishlistActions } from '@/features/wishlist/stores/wishlist-store'
+import { useWishlistButton } from '@/features/wishlist/hooks/use-wishlist-button'
 import type { Book } from '@/types/book'
 import { cn } from '@/utils/cn'
 
@@ -30,16 +30,10 @@ type WishlistButtonProps = {
 }
 
 export function WishlistButton({ book, ref, onUnwish }: WishlistButtonProps) {
-  const isWished = useIsWishedBook(book.id)
-  const { toggleWishedBook } = useWishlistActions()
+  const { isWished, toggleWishlist } = useWishlistButton({ book, onUnwish })
   const wishState: WishState = isWished ? 'wished' : 'notWished'
   const collapsedRowHeart = COLLAPSED_ROW_HEART[wishState]
   const expandedRowHeart = EXPANDED_ROW_HEART[wishState]
-
-  const handleClick = () => {
-    toggleWishedBook(book)
-    if (isWished) onUnwish?.()
-  }
 
   return (
     <button
@@ -47,7 +41,7 @@ export function WishlistButton({ book, ref, onUnwish }: WishlistButtonProps) {
       type="button"
       aria-pressed={isWished}
       aria-label={`${book.title} 찜하기`}
-      onClick={handleClick}
+      onClick={toggleWishlist}
       className="flex size-6 cursor-pointer items-center justify-center"
     >
       <Icon
