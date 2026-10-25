@@ -19,3 +19,33 @@ export function createKakaoBookDocument(
     ...overrides,
   }
 }
+
+type KakaoBookSearchResponseOptions = {
+  page: number
+  totalCount: number
+  pageSize?: number
+}
+
+export function createKakaoBookSearchResponse({
+  page,
+  totalCount,
+  pageSize = 10,
+}: KakaoBookSearchResponseOptions) {
+  const firstIndex = (page - 1) * pageSize
+  const documentCount = Math.max(0, Math.min(pageSize, totalCount - firstIndex))
+  return {
+    meta: {
+      total_count: totalCount,
+      pageable_count: totalCount,
+      is_end: firstIndex + documentCount >= totalCount,
+    },
+    documents: Array.from({ length: documentCount }, (_, offset) => {
+      const bookNumber = firstIndex + offset + 1
+      return createKakaoBookDocument({
+        title: `테스트 책 ${bookNumber}`,
+        isbn: `${9780000000000 + bookNumber}`,
+        url: `https://search.daum.net/search?w=bookpage&bookId=${bookNumber}`,
+      })
+    }),
+  }
+}
