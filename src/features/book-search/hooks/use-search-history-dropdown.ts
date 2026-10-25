@@ -13,7 +13,7 @@ export function useSearchHistoryDropdown() {
   const [isOpen, setIsOpen] = useState(false)
   const listboxNavigation = useListboxNavigation(historyEntries)
   const isVisible = isOpen && historyEntries.length > 0
-  const highlightedEntry = isVisible ? listboxNavigation.highlightedItem : null
+  const highlightedEntry = isVisible ? listboxNavigation.highlightedOption : null
 
   const close = () => {
     setIsOpen(false)

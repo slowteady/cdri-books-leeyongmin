@@ -28,7 +28,7 @@ export function Select<Value extends string>({
   const selectedOption = options.find((option) => option.value === value)
   const selectableOptions = options.filter((option) => option.value !== value)
   const listboxNavigation = useListboxNavigation(selectableOptions)
-  const highlightedOption = isOpen ? listboxNavigation.highlightedItem : null
+  const highlightedOption = isOpen ? listboxNavigation.highlightedOption : null
 
   const close = () => {
     setIsOpen(false)
