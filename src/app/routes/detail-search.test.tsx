@@ -145,6 +145,36 @@ describe('상세 검색', () => {
     expect(screen.getByRole('combobox', { name: '검색어' })).toHaveValue('')
   })
 
+  test('메인 검색창에 입력만 해 둔 채 상세 검색을 하면 메인 검색창을 비운다', async () => {
+    mockBookSearchApi()
+    const { user } = renderApp('/')
+    await user.type(await screen.findByRole('combobox', { name: '검색어' }), '바다')
+    const dialog = await openDetailSearch(user)
+    await user.type(within(dialog).getByRole('textbox', { name: '상세 검색어' }), '하루키')
+
+    await user.click(within(dialog).getByRole('button', { name: '검색하기' }))
+
+    expect(screen.getByRole('combobox', { name: '검색어' })).toHaveValue('')
+  })
+
+  test('상세 조건을 입력만 하고 닫은 뒤 전체 검색을 하면 상세 조건을 초기화한다', async () => {
+    mockBookSearchApi()
+    const { user } = renderApp('/')
+    const dialog = await openDetailSearch(user)
+    await user.click(within(dialog).getByRole('combobox', { name: '검색 조건' }))
+    await user.click(screen.getByRole('option', { name: '저자명' }))
+    await user.type(within(dialog).getByRole('textbox', { name: '상세 검색어' }), '하루키')
+    await user.keyboard('{Escape}')
+
+    await user.type(screen.getByRole('combobox', { name: '검색어' }), '숲{Enter}')
+    const reopenedDialog = await openDetailSearch(user)
+
+    expect(within(reopenedDialog).getByRole('combobox', { name: '검색 조건' })).toHaveTextContent(
+      '제목',
+    )
+    expect(within(reopenedDialog).getByRole('textbox', { name: '상세 검색어' })).toHaveValue('')
+  })
+
   test('상세 검색어가 비어 있으면 검색하지 않고 팝업을 그대로 둔다', async () => {
     const { router, user } = renderApp('/')
     const dialog = await openDetailSearch(user)

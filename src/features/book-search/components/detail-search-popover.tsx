@@ -21,11 +21,16 @@ const SEARCH_TARGET_OPTIONS: SelectOption<SearchTarget>[] = SEARCH_TARGETS.map((
 
 type DetailSearchPopoverProps = {
   currentCondition: DetailSearchCondition | null
+  searchKey: string
   onSearch: (searchTarget: SearchTarget, query: string) => void
 }
 
-export function DetailSearchPopover({ currentCondition, onSearch }: DetailSearchPopoverProps) {
-  const detailSearchForm = useDetailSearchForm({ currentCondition, onSearch })
+export function DetailSearchPopover({
+  currentCondition,
+  searchKey,
+  onSearch,
+}: DetailSearchPopoverProps) {
+  const detailSearchForm = useDetailSearchForm({ currentCondition, searchKey, onSearch })
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()

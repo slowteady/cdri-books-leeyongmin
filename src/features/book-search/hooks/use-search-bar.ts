@@ -6,17 +6,23 @@ import { useSearchHistoryDropdown } from './use-search-history-dropdown'
 
 type UseSearchBarParams = {
   initialQuery: string
+  searchKey: string
   onSearch: (query: string) => void
   onSelectHistoryEntry: (entry: SearchHistoryEntry) => void
 }
 
-export function useSearchBar({ initialQuery, onSearch, onSelectHistoryEntry }: UseSearchBarParams) {
+export function useSearchBar({
+  initialQuery,
+  searchKey,
+  onSearch,
+  onSelectHistoryEntry,
+}: UseSearchBarParams) {
   const historyDropdown = useSearchHistoryDropdown()
   const [query, setQuery] = useState(initialQuery)
-  const [syncedInitialQuery, setSyncedInitialQuery] = useState(initialQuery)
+  const [syncedSearchKey, setSyncedSearchKey] = useState(searchKey)
 
-  if (initialQuery !== syncedInitialQuery) {
-    setSyncedInitialQuery(initialQuery)
+  if (searchKey !== syncedSearchKey) {
+    setSyncedSearchKey(searchKey)
     setQuery(initialQuery)
   }
 

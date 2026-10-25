@@ -6,7 +6,7 @@ import { toSearchMode } from '@/features/book-search/stores/search-history-store
 import { WishlistButton } from '@/features/wishlist/components/wishlist-button'
 
 export function SearchPage() {
-  const { searchMode, search } = useSearchNavigation()
+  const { searchMode, searchKey, search } = useSearchNavigation()
 
   return (
     <>
@@ -14,6 +14,7 @@ export function SearchPage() {
       <div className="mt-4 flex items-center gap-4 lg:mt-7">
         <SearchBar
           initialQuery={searchMode.type === 'all' ? searchMode.query : ''}
+          searchKey={searchKey}
           onSearch={(query) => search({ type: 'all', query })}
           onSelectHistoryEntry={(entry) => search(toSearchMode(entry))}
         />
@@ -23,6 +24,7 @@ export function SearchPage() {
               ? { searchTarget: searchMode.searchTarget, query: searchMode.query }
               : null
           }
+          searchKey={searchKey}
           onSearch={(searchTarget, query) => search({ type: 'detail', searchTarget, query })}
         />
       </div>

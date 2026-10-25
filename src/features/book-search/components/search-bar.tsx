@@ -8,12 +8,18 @@ import { SEARCH_TARGET_LABELS } from '@/features/book-search/utils/search-mode'
 
 type SearchBarProps = {
   initialQuery: string
+  searchKey: string
   onSearch: (query: string) => void
   onSelectHistoryEntry: (entry: SearchHistoryEntry) => void
 }
 
-export function SearchBar({ initialQuery, onSearch, onSelectHistoryEntry }: SearchBarProps) {
-  const searchBar = useSearchBar({ initialQuery, onSearch, onSelectHistoryEntry })
+export function SearchBar({
+  initialQuery,
+  searchKey,
+  onSearch,
+  onSelectHistoryEntry,
+}: SearchBarProps) {
+  const searchBar = useSearchBar({ initialQuery, searchKey, onSearch, onSelectHistoryEntry })
   const { historyDropdown } = searchBar
   const historyListId = useId()
   const toHistoryOptionId = (index: number) => `${historyListId}-option-${index}`

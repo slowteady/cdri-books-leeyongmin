@@ -1,4 +1,4 @@
-import { useSearchParams } from 'react-router'
+import { useLocation, useSearchParams } from 'react-router'
 
 import {
   toHistoryEntry,
@@ -12,6 +12,7 @@ import {
 
 export function useSearchNavigation() {
   const [searchParams, setSearchParams] = useSearchParams()
+  const { key: searchKey } = useLocation()
   const { addHistoryEntry } = useSearchHistoryActions()
   const searchMode = parseSearchMode(searchParams)
 
@@ -20,5 +21,5 @@ export function useSearchNavigation() {
     setSearchParams(toSearchParams(nextSearchMode))
   }
 
-  return { searchMode, search }
+  return { searchMode, searchKey, search }
 }

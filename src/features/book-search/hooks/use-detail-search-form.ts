@@ -11,23 +11,24 @@ export type DetailSearchCondition = {
 
 type UseDetailSearchFormParams = {
   currentCondition: DetailSearchCondition | null
+  searchKey: string
   onSearch: (searchTarget: SearchTarget, query: string) => void
 }
 
-function toConditionKey(condition: DetailSearchCondition | null) {
-  return condition ? `${condition.searchTarget}:${condition.query}` : ''
-}
-
-export function useDetailSearchForm({ currentCondition, onSearch }: UseDetailSearchFormParams) {
+export function useDetailSearchForm({
+  currentCondition,
+  searchKey,
+  onSearch,
+}: UseDetailSearchFormParams) {
   const [isOpen, setIsOpen] = useState(false)
   const [searchTarget, setSearchTarget] = useState<SearchTarget>(
     currentCondition?.searchTarget ?? DEFAULT_SEARCH_TARGET,
   )
   const [query, setQuery] = useState(currentCondition?.query ?? '')
-  const [syncedConditionKey, setSyncedConditionKey] = useState(toConditionKey(currentCondition))
+  const [syncedSearchKey, setSyncedSearchKey] = useState(searchKey)
 
-  if (toConditionKey(currentCondition) !== syncedConditionKey) {
-    setSyncedConditionKey(toConditionKey(currentCondition))
+  if (searchKey !== syncedSearchKey) {
+    setSyncedSearchKey(searchKey)
     setSearchTarget(currentCondition?.searchTarget ?? DEFAULT_SEARCH_TARGET)
     setQuery(currentCondition?.query ?? '')
   }
