@@ -1,4 +1,4 @@
-import { HttpError } from './api-client'
+import { HttpError, NetworkError } from './api-client'
 import { shouldRetryQuery } from './react-query'
 
 describe('shouldRetryQuery', () => {
@@ -15,11 +15,15 @@ describe('shouldRetryQuery', () => {
 
   test('서버 오류(5xx)와 네트워크 오류는 두 번까지 다시 시도한다', () => {
     const serverError = new HttpError(503, null)
-    const networkError = new TypeError('Failed to fetch')
+    const networkError = new NetworkError()
 
     expect(shouldRetryQuery(1, serverError)).toBe(true)
     expect(shouldRetryQuery(2, serverError)).toBe(false)
     expect(shouldRetryQuery(1, networkError)).toBe(true)
     expect(shouldRetryQuery(2, networkError)).toBe(false)
+  })
+
+  test('네트워크 오류가 아닌 예상하지 못한 오류는 다시 시도하지 않는다', () => {
+    expect(shouldRetryQuery(0, new TypeError('undefined is not a function'))).toBe(false)
   })
 })

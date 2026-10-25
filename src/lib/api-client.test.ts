@@ -1,6 +1,6 @@
 import { mockFetch } from '@/testing/mock-fetch'
 
-import { getJson, HttpError } from './api-client'
+import { getJson, HttpError, NetworkError } from './api-client'
 
 describe('getJson', () => {
   test('성공하면 응답 본문 JSON을 돌려준다', async () => {
@@ -24,6 +24,19 @@ describe('getJson', () => {
     mockFetch(() => new Response('Bad Gateway', { status: 502 }))
 
     await expect(getJson('/api/books')).rejects.toMatchObject({ status: 502, errorType: null })
+  })
+
+  test('네트워크에 연결하지 못하면 NetworkError를 던진다', async () => {
+    mockFetch(() => Promise.reject(new TypeError('Failed to fetch')))
+
+    await expect(getJson('/api/books')).rejects.toBeInstanceOf(NetworkError)
+  })
+
+  test('요청이 취소되면 취소 오류를 바꾸지 않고 그대로 던진다', async () => {
+    const abortError = new DOMException('aborted', 'AbortError')
+    mockFetch(() => Promise.reject(abortError))
+
+    await expect(getJson('/api/books')).rejects.toBe(abortError)
   })
 
   test('요청 취소 신호를 fetch에 그대로 넘긴다', async () => {

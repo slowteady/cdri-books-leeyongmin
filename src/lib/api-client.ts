@@ -10,6 +10,26 @@ export class HttpError extends Error {
   }
 }
 
+export class NetworkError extends Error {
+  constructor() {
+    super('Network request failed')
+    this.name = 'NetworkError'
+  }
+}
+
+function isAbortError(error: unknown) {
+  return error instanceof DOMException && error.name === 'AbortError'
+}
+
+async function requestOrThrowNetworkError(url: string, init?: RequestInit) {
+  try {
+    return await fetch(url, init)
+  } catch (error) {
+    if (isAbortError(error)) throw error
+    throw new NetworkError()
+  }
+}
+
 type KakaoErrorBody = { errorType?: unknown }
 
 async function readErrorType(response: Response) {
@@ -18,7 +38,7 @@ async function readErrorType(response: Response) {
 }
 
 export async function getJson<T>(url: string, init?: RequestInit): Promise<T> {
-  const response = await fetch(url, init)
+  const response = await requestOrThrowNetworkError(url, init)
   if (!response.ok) throw new HttpError(response.status, await readErrorType(response))
   return (await response.json()) as T
 }

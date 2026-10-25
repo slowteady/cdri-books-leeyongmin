@@ -1,4 +1,4 @@
-import { HttpError } from '@/lib/api-client'
+import { HttpError, NetworkError } from '@/lib/api-client'
 
 type SearchErrorDescription = {
   message: string
@@ -10,7 +10,7 @@ const UNAUTHORIZED_STATUSES = [401, 403]
 const TOO_MANY_REQUESTS_STATUS = 429
 
 export function describeSearchError(error: unknown): SearchErrorDescription {
-  if (error instanceof TypeError) {
+  if (error instanceof NetworkError) {
     return { message: '네트워크 연결을 확인하고 다시 시도해 주세요.', canRetry: true }
   }
   const status = error instanceof HttpError ? error.status : null
