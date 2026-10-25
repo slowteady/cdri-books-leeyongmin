@@ -1,3 +1,10 @@
+import { WishlistList } from '@/features/wishlist/components/wishlist-list'
+
 export function WishlistPage() {
-  return <h1 className="text-title2 text-fg-title">내가 찜한 책</h1>
+  return (
+    <>
+      <h1 className="text-title2 text-fg-title">내가 찜한 책</h1>
+      <WishlistList />
+    </>
+  )
 }

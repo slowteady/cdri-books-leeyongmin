@@ -72,3 +72,8 @@ export const useWishlistStore = create<WishlistState>()(
     },
   ),
 )
+
+export const useWishedBooks = () => useWishlistStore((state) => state.wishedBooks)
+export const useIsWishedBook = (bookId: string) =>
+  useWishlistStore((state) => state.wishedBooks.some((wishedBook) => wishedBook.id === bookId))
+export const useWishlistActions = () => useWishlistStore((state) => state.actions)

@@ -3,6 +3,7 @@ import { SearchBar } from '@/features/book-search/components/search-bar'
 import { SearchResults } from '@/features/book-search/components/search-results'
 import { useSearchNavigation } from '@/features/book-search/hooks/use-search-navigation'
 import { toSearchMode } from '@/features/book-search/stores/search-history-store'
+import { WishlistButton } from '@/features/wishlist/components/wishlist-button'
 
 export function SearchPage() {
   const { searchMode, search } = useSearchNavigation()
@@ -25,7 +26,10 @@ export function SearchPage() {
           onSearch={(searchTarget, query) => search({ type: 'detail', searchTarget, query })}
         />
       </div>
-      <SearchResults searchMode={searchMode} renderWishlistButton={() => null} />
+      <SearchResults
+        searchMode={searchMode}
+        renderWishlistButton={(book) => <WishlistButton book={book} />}
+      />
     </>
   )
 }
