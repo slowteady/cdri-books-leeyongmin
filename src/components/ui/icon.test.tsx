@@ -24,7 +24,7 @@ describe('Icon', () => {
   })
 
   test('색은 글자색을 따른다', () => {
-    const svg = renderIconSvg(<Icon name="likeFill" className="text-red" />)
+    const svg = renderIconSvg(<Icon name="heartFill" className="text-red" />)
 
     expect(svg).toHaveAttribute('fill', 'currentColor')
     expect(svg).toHaveClass('text-red')

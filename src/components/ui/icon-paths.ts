@@ -48,7 +48,7 @@ export const ICON_DEFINITIONS = {
       },
     ],
   },
-  likeLine: {
+  heartLine: {
     width: 24,
     height: 24,
     paths: [
@@ -59,7 +59,7 @@ export const ICON_DEFINITIONS = {
       },
     ],
   },
-  likeFill: {
+  heartFill: {
     width: 24,
     height: 24,
     paths: [
@@ -72,7 +72,7 @@ export const ICON_DEFINITIONS = {
       },
     ],
   },
-  likeLineSmall: {
+  heartLineSmall: {
     width: 16,
     height: 16,
     paths: [
@@ -81,7 +81,7 @@ export const ICON_DEFINITIONS = {
       },
     ],
   },
-  likeFillSmall: {
+  heartFillSmall: {
     width: 16,
     height: 16,
     paths: [

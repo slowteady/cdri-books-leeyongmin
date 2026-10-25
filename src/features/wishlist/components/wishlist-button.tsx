@@ -14,13 +14,13 @@ type HeartStyle = {
 }
 
 const COLLAPSED_ROW_HEART = {
-  wished: { icon: 'likeFillSmall', colorClassName: 'text-red' },
-  notWished: { icon: 'likeLineSmall', colorClassName: 'text-white' },
+  wished: { icon: 'heartFillSmall', colorClassName: 'text-red' },
+  notWished: { icon: 'heartLineSmall', colorClassName: 'text-white' },
 } as const satisfies Record<WishState, HeartStyle>
 
 const EXPANDED_ROW_HEART = {
-  wished: { icon: 'likeFill', colorClassName: 'text-red' },
-  notWished: { icon: 'likeLine', colorClassName: 'text-gray' },
+  wished: { icon: 'heartFill', colorClassName: 'text-red' },
+  notWished: { icon: 'heartLine', colorClassName: 'text-gray' },
 } as const satisfies Record<WishState, HeartStyle>
 
 type WishlistButtonProps = {
