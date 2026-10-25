@@ -24,6 +24,25 @@ function renderExpanded(overrides: Partial<Book>) {
 }
 
 describe('BookListItem', () => {
+  test('상세보기로 펼치면 행 높이가 서랍처럼 늘어나며 열린다', () => {
+    vi.spyOn(HTMLElement.prototype, 'offsetHeight', 'get').mockImplementation(function (
+      this: HTMLElement,
+    ) {
+      const isExpandedRow = this.querySelector('[data-expanded]') ?? this.closest('[data-expanded]')
+      return isExpandedRow ? 344 : 100
+    })
+    vi.stubGlobal('matchMedia', (query: string) => ({ matches: false, media: query }))
+    const book = createBook()
+    const props = { book, onToggleExpanded: vi.fn(), renderWishlistButton: () => null }
+    const { rerender } = render(<BookListItem {...props} isExpanded={false} />)
+
+    rerender(<BookListItem {...props} isExpanded />)
+
+    const drawer = screen.getByRole('article').parentElement
+    expect(drawer?.style.height).toBe('344px')
+    expect(drawer?.style.overflow).toBe('hidden')
+  })
+
   test('제목, 저자, 목록 가격을 보여준다', () => {
     renderBookListItem()
 

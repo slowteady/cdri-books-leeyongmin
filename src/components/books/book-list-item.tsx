@@ -2,6 +2,7 @@ import { useId, useState, type ReactNode } from 'react'
 
 import { buttonStyles } from '@/components/ui/button-styles'
 import { Icon } from '@/components/ui/icon'
+import { useHeightTransition } from '@/hooks/use-height-transition'
 import type { Book } from '@/types/book'
 import { cn } from '@/utils/cn'
 
@@ -28,31 +29,34 @@ export function BookListItem({
   const elementId = useId()
   const titleId = `${elementId}-title`
   const descriptionId = `${elementId}-description`
+  const drawerRef = useHeightTransition<HTMLDivElement>(isExpanded)
 
   return (
-    <article
-      aria-labelledby={titleId}
-      data-expanded={isExpanded || undefined}
-      className={cn(ITEM_MOBILE_LAYOUT, ITEM_DESKTOP_LAYOUT, ITEM_DESKTOP_EXPANDED_LAYOUT)}
-    >
-      <BookThumbnail
-        book={book}
-        isExpanded={isExpanded}
-        wishlistButton={renderWishlistButton(book)}
-      />
-      <BookSummary
-        book={book}
-        isExpanded={isExpanded}
-        titleId={titleId}
-        descriptionId={descriptionId}
-      />
-      <BookActions
-        book={book}
-        isExpanded={isExpanded}
-        descriptionId={descriptionId}
-        onToggleExpanded={() => onToggleExpanded(book.id)}
-      />
-    </article>
+    <div ref={drawerRef}>
+      <article
+        aria-labelledby={titleId}
+        data-expanded={isExpanded || undefined}
+        className={cn(ITEM_MOBILE_LAYOUT, ITEM_DESKTOP_LAYOUT, ITEM_DESKTOP_EXPANDED_LAYOUT)}
+      >
+        <BookThumbnail
+          book={book}
+          isExpanded={isExpanded}
+          wishlistButton={renderWishlistButton(book)}
+        />
+        <BookSummary
+          book={book}
+          isExpanded={isExpanded}
+          titleId={titleId}
+          descriptionId={descriptionId}
+        />
+        <BookActions
+          book={book}
+          isExpanded={isExpanded}
+          descriptionId={descriptionId}
+          onToggleExpanded={() => onToggleExpanded(book.id)}
+        />
+      </article>
+    </div>
   )
 }
 
