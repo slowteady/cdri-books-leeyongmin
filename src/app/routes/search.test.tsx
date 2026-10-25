@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react'
+import { act, screen } from '@testing-library/react'
 
 import { createKakaoBookSearchResponse } from '@/testing/data/kakao-books'
 import { mockFetch } from '@/testing/mock-fetch'
@@ -59,6 +59,23 @@ describe('도서 검색 결과', () => {
 
     expect(await screen.findByRole('status', { name: '검색 결과 불러오는 중' })).toBeInTheDocument()
     expect(screen.queryByText('검색된 결과가 없습니다.')).not.toBeInTheDocument()
+  })
+
+  test('다른 검색 결과로 이동하면 펼쳐 둔 상세보기를 이어서 펼치지 않는다', async () => {
+    mockBookSearchApi(3)
+    const { router, user } = renderApp('/?q=바다')
+    await screen.findByText('테스트 책 1')
+    await act(() => router.navigate('/?q=숲'))
+    await screen.findByText('테스트 책 1')
+    await user.click(screen.getAllByRole('button', { name: '상세보기' })[0] as HTMLElement)
+
+    await act(() => router.navigate(-1))
+
+    expect(await screen.findByText('테스트 책 1')).toBeInTheDocument()
+    expect(screen.getAllByRole('button', { name: '상세보기' })[0]).toHaveAttribute(
+      'aria-expanded',
+      'false',
+    )
   })
 
   test('검색하는 동안에는 결과 건수를 0건으로 알리지 않는다', async () => {

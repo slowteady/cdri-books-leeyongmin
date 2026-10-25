@@ -29,6 +29,7 @@ export function SearchPage() {
         />
       </div>
       <SearchResults
+        key={searchKey}
         searchMode={searchMode}
         renderWishlistButton={(book) => <WishlistButton book={book} />}
       />
