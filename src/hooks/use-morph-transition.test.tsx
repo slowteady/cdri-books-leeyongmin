@@ -12,11 +12,11 @@ const LARGE_BOX = { offsetLeft: 54, offsetTop: 24, offsetWidth: 210, offsetHeigh
 
 type CoverProps = {
   isLarge: boolean
-  growOnly?: boolean
+  shouldAnimateGrowthOnly?: boolean
 }
 
-function Cover({ isLarge, growOnly = false }: CoverProps) {
-  const coverRef = useMorphTransition<HTMLElement>(isLarge, { growOnly })
+function Cover({ isLarge, shouldAnimateGrowthOnly = false }: CoverProps) {
+  const coverRef = useMorphTransition<HTMLElement>(isLarge, { shouldAnimateGrowthOnly })
   return <figure ref={coverRef} aria-label="표지" data-large={isLarge || undefined} />
 }
 
@@ -64,9 +64,9 @@ describe('useMorphTransition', () => {
   test('커질 때만 애니메이션하도록 하면 커질 때는 애니메이션한다', () => {
     mockLayoutBoxes()
     const animate = mockAnimate()
-    const { rerender } = render(<Cover isLarge={false} growOnly />)
+    const { rerender } = render(<Cover isLarge={false} shouldAnimateGrowthOnly />)
 
-    rerender(<Cover isLarge growOnly />)
+    rerender(<Cover isLarge shouldAnimateGrowthOnly />)
 
     expect(animate).toHaveBeenCalledOnce()
   })
@@ -74,9 +74,9 @@ describe('useMorphTransition', () => {
   test('커질 때만 애니메이션하도록 하면 줄어들 때는 바로 바꾼다', () => {
     mockLayoutBoxes()
     const animate = mockAnimate()
-    const { rerender } = render(<Cover isLarge growOnly />)
+    const { rerender } = render(<Cover isLarge shouldAnimateGrowthOnly />)
 
-    rerender(<Cover isLarge={false} growOnly />)
+    rerender(<Cover isLarge={false} shouldAnimateGrowthOnly />)
 
     expect(animate).not.toHaveBeenCalled()
   })

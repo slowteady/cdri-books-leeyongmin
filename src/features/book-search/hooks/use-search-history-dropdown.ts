@@ -9,7 +9,7 @@ import { useListboxNavigation, type HighlightDirection } from '@/hooks/use-listb
 
 export function useSearchHistoryDropdown() {
   const historyEntries = useSearchHistoryEntries()
-  const { removeHistoryEntry } = useSearchHistoryActions()
+  const searchHistoryActions = useSearchHistoryActions()
   const [isOpen, setIsOpen] = useState(false)
   const listboxNavigation = useListboxNavigation(historyEntries)
   const isVisible = isOpen && historyEntries.length > 0
@@ -25,13 +25,13 @@ export function useSearchHistoryDropdown() {
     listboxNavigation.moveHighlight(direction)
   }
 
-  const removeEntry = (entry: SearchHistoryEntry) => {
-    removeHistoryEntry(entry)
+  const removeHistoryEntry = (entry: SearchHistoryEntry) => {
+    searchHistoryActions.removeHistoryEntry(entry)
     listboxNavigation.resetHighlight()
   }
 
   const removeHighlightedEntry = () => {
-    if (highlightedEntry) removeEntry(highlightedEntry)
+    if (highlightedEntry) removeHistoryEntry(highlightedEntry)
   }
 
   return {
@@ -42,7 +42,7 @@ export function useSearchHistoryDropdown() {
     open: () => setIsOpen(true),
     close,
     moveHighlight,
-    removeEntry,
+    removeHistoryEntry,
     removeHighlightedEntry,
   }
 }

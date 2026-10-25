@@ -73,8 +73,8 @@ function toOriginalPrice(price: number) {
 }
 
 function toSalePrice(originalPrice: number, salePrice: number) {
-  const isDiscounted = salePrice > 0 && salePrice < originalPrice
-  return isDiscounted ? salePrice : null
+  const isOnSale = salePrice > 0 && salePrice < originalPrice
+  return isOnSale ? salePrice : null
 }
 
 export function toBook(kakaoBook: KakaoBookDocument): Book {

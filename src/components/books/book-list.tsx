@@ -29,7 +29,7 @@ export function BookList({
 }: BookListProps) {
   const [expandedBookId, setExpandedBookId] = useState<string | null>(null)
   const loadMoreTriggerRef = useIntersectionObserver<HTMLButtonElement>(onLoadMore)
-  const showsLoadMoreButton = hasMore && !isLoadingMore && !hasLoadMoreFailed
+  const shouldShowLoadMoreButton = hasMore && !isLoadingMore && !hasLoadMoreFailed
 
   const toggleExpandedBook = (bookId: string) => {
     setExpandedBookId((currentBookId) => (currentBookId === bookId ? null : bookId))
@@ -59,7 +59,7 @@ export function BookList({
           className="gap-3 py-8"
         />
       )}
-      {showsLoadMoreButton && (
+      {shouldShowLoadMoreButton && (
         <div className="flex justify-center py-8">
           <Button ref={loadMoreTriggerRef} variant="secondary" onClick={onLoadMore}>
             더 보기

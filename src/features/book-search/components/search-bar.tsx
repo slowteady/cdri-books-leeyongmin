@@ -98,7 +98,7 @@ export function SearchBar({ initialQuery, searchKey, onSearch }: SearchBarProps)
               isHighlighted={index === historyDropdown.highlightedIndex}
               entry={entry}
               onSelect={() => searchBar.selectHistoryEntry(entry)}
-              onRemove={() => historyDropdown.removeEntry(entry)}
+              onRemove={() => historyDropdown.removeHistoryEntry(entry)}
             />
           ))}
         </ul>

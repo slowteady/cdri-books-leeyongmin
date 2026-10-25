@@ -39,12 +39,12 @@ function toInvertedTransform(previousBox: LayoutBox, currentBox: LayoutBox) {
 }
 
 type MorphTransitionOptions = {
-  growOnly?: boolean
+  shouldAnimateGrowthOnly?: boolean
 }
 
 export function useMorphTransition<AnimatedElement extends HTMLElement>(
   trigger: unknown,
-  { growOnly = false }: MorphTransitionOptions = {},
+  { shouldAnimateGrowthOnly = false }: MorphTransitionOptions = {},
 ) {
   const elementRef = useRef<AnimatedElement>(null)
   const previousBoxRef = useRef<LayoutBox | null>(null)
@@ -56,7 +56,7 @@ export function useMorphTransition<AnimatedElement extends HTMLElement>(
     const currentBox = readLayoutBox(element)
     previousBoxRef.current = currentBox
     if (!previousBox || isSameLayoutBox(previousBox, currentBox)) return
-    if (growOnly && !isGrowing(previousBox, currentBox)) return
+    if (shouldAnimateGrowthOnly && !isGrowing(previousBox, currentBox)) return
     if (prefersReducedMotion() || typeof element.animate !== 'function') return
 
     const animation = element.animate(
@@ -67,7 +67,7 @@ export function useMorphTransition<AnimatedElement extends HTMLElement>(
       { duration: EXPAND_TRANSITION_DURATION_MS, easing: EXPAND_TRANSITION_EASING },
     )
     return () => animation.cancel()
-  }, [trigger, growOnly])
+  }, [trigger, shouldAnimateGrowthOnly])
 
   return elementRef
 }

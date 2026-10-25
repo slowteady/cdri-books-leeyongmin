@@ -88,7 +88,9 @@ type BookThumbnailProps = {
 }
 
 function BookThumbnail({ book, isExpanded, wishlistButton }: BookThumbnailProps) {
-  const thumbnailRef = useMorphTransition<HTMLDivElement>(isExpanded, { growOnly: true })
+  const thumbnailRef = useMorphTransition<HTMLDivElement>(isExpanded, {
+    shouldAnimateGrowthOnly: true,
+  })
   const [failedThumbnailUrls, setFailedThumbnailUrls] = useState<string[]>([])
   const thumbnailUrlCandidates = getThumbnailUrlCandidates(book.thumbnailUrl, isExpanded)
   const thumbnailUrl = thumbnailUrlCandidates.find((url) => !failedThumbnailUrls.includes(url))
@@ -178,7 +180,7 @@ type BookActionsProps = {
 }
 
 function BookActions({ book, isExpanded, descriptionId, onToggleExpanded }: BookActionsProps) {
-  const hasDiscount = book.salePrice !== null
+  const hasSalePrice = book.salePrice !== null
 
   const preloadExpandedThumbnail = () => {
     if (book.thumbnailUrl && !isExpanded) preloadImage(toLargeThumbnailUrl(book.thumbnailUrl))
@@ -189,9 +191,9 @@ function BookActions({ book, isExpanded, descriptionId, onToggleExpanded }: Book
       <p className={COLLAPSED_PRICE_TEXT}>{formatPrice(getDisplayPrice(book))}</p>
       <div className={EXPANDED_PRICES_LAYOUT}>
         <PriceRow label="원가">
-          <OriginalPrice price={book.originalPrice} hasDiscount={hasDiscount} />
+          <OriginalPrice originalPrice={book.originalPrice} hasSalePrice={hasSalePrice} />
         </PriceRow>
-        {hasDiscount && (
+        {hasSalePrice && (
           <PriceRow label="할인가">
             <strong className="text-title3 leading-6.5 text-fg-primary">
               {formatPrice(book.salePrice)}
@@ -238,16 +240,16 @@ function PriceRow({ label, children }: PriceRowProps) {
 }
 
 type OriginalPriceProps = {
-  price: number | null
-  hasDiscount: boolean
+  originalPrice: number | null
+  hasSalePrice: boolean
 }
 
-function OriginalPrice({ price, hasDiscount }: OriginalPriceProps) {
-  const PriceElement = hasDiscount ? 'del' : 'span'
+function OriginalPrice({ originalPrice, hasSalePrice }: OriginalPriceProps) {
+  const PriceElement = hasSalePrice ? 'del' : 'span'
 
   return (
     <PriceElement className="text-title3 leading-6.5 font-demilight text-fg-primary">
-      {formatPrice(price)}
+      {formatPrice(originalPrice)}
     </PriceElement>
   )
 }
