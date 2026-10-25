@@ -23,4 +23,18 @@ describe('describeSearchError', () => {
       canRetry: true,
     })
   })
+
+  test('네트워크에 연결하지 못하면 연결 확인을 안내하고 다시 시도할 수 있다', () => {
+    expect(describeSearchError(new TypeError('Failed to fetch'))).toEqual({
+      message: '네트워크 연결을 확인하고 다시 시도해 주세요.',
+      canRetry: true,
+    })
+  })
+
+  test('서버 오류(5xx)는 일시적인 오류로 안내하고 다시 시도할 수 있다', () => {
+    expect(describeSearchError(new HttpError(500, null))).toEqual({
+      message: '일시적인 오류입니다. 다시 시도해 주세요.',
+      canRetry: true,
+    })
+  })
 })

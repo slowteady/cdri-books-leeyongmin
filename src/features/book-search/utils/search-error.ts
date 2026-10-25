@@ -10,6 +10,9 @@ const UNAUTHORIZED_STATUSES = [401, 403]
 const TOO_MANY_REQUESTS_STATUS = 429
 
 export function describeSearchError(error: unknown): SearchErrorDescription {
+  if (error instanceof TypeError) {
+    return { message: '네트워크 연결을 확인하고 다시 시도해 주세요.', canRetry: true }
+  }
   const status = error instanceof HttpError ? error.status : null
   if (status === BAD_REQUEST_STATUS) {
     return { message: '검색어를 확인해 주세요.', canRetry: false }
