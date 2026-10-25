@@ -72,6 +72,66 @@ describe('BookListItem', () => {
     expect(screen.getByRole('heading', { level: 3, name: '책 소개' })).toBeInTheDocument()
   })
 
+  test('상세보기로 펼치면 표지가 작은 크기에서 큰 크기로 커지는 애니메이션을 한다', () => {
+    vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockImplementation(function (
+      this: HTMLElement,
+    ) {
+      return this.closest('[data-expanded]') ? 210 : 48
+    })
+    vi.stubGlobal('matchMedia', (query: string) => ({ matches: false, media: query }))
+    const animate = vi.fn(() => ({ cancel: vi.fn() }))
+    Object.defineProperty(HTMLElement.prototype, 'animate', { value: animate, configurable: true })
+    onTestFinished(() => {
+      Reflect.deleteProperty(HTMLElement.prototype, 'animate')
+    })
+    const props = {
+      book: createBook(),
+      onToggleExpanded: vi.fn(),
+      renderWishlistButton: () => null,
+    }
+    const { rerender } = render(<BookListItem {...props} isExpanded={false} />)
+
+    rerender(<BookListItem {...props} isExpanded />)
+
+    expect(animate).toHaveBeenCalledWith(
+      [
+        expect.objectContaining({ transform: expect.stringContaining(`scale(${48 / 210}`) }),
+        expect.objectContaining({ transform: 'none' }),
+      ],
+      expect.anything(),
+    )
+  })
+
+  test('상세보기를 접을 때는 표지를 바로 작은 크기로 바꾼다', () => {
+    vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockImplementation(function (
+      this: HTMLElement,
+    ) {
+      return this.closest('[data-expanded]') ? 210 : 48
+    })
+    vi.stubGlobal('matchMedia', (query: string) => ({ matches: false, media: query }))
+    const animate = vi.fn(() => ({ cancel: vi.fn() }))
+    Object.defineProperty(HTMLElement.prototype, 'animate', { value: animate, configurable: true })
+    onTestFinished(() => {
+      Reflect.deleteProperty(HTMLElement.prototype, 'animate')
+    })
+    const props = {
+      book: createBook(),
+      onToggleExpanded: vi.fn(),
+      renderWishlistButton: () => null,
+    }
+    const { rerender } = render(<BookListItem {...props} isExpanded />)
+
+    rerender(<BookListItem {...props} isExpanded={false} />)
+
+    expect(animate).not.toHaveBeenCalledWith(
+      [
+        expect.objectContaining({ transform: expect.stringContaining('scale(') }),
+        expect.anything(),
+      ],
+      expect.anything(),
+    )
+  })
+
   test('상세보기에 마우스를 올리면 펼쳤을 때 쓸 큰 표지를 미리 받아 둔다', async () => {
     const requestedImageUrls = stubImagePreload()
     renderBookListItem()

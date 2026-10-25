@@ -1,11 +1,9 @@
 import { useLayoutEffect, useRef } from 'react'
 
-const HEIGHT_TRANSITION = 'height 300ms cubic-bezier(0.4, 0, 0.2, 1)'
-const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)'
+import { EXPAND_TRANSITION_DURATION_MS, EXPAND_TRANSITION_EASING } from '@/config/constants'
+import { prefersReducedMotion } from '@/utils/prefers-reduced-motion'
 
-function prefersReducedMotion() {
-  return window.matchMedia?.(REDUCED_MOTION_QUERY).matches ?? false
-}
+const HEIGHT_TRANSITION = `height ${EXPAND_TRANSITION_DURATION_MS}ms ${EXPAND_TRANSITION_EASING}`
 
 function forceReflow(element: HTMLElement) {
   element.getBoundingClientRect()

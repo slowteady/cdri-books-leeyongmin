@@ -3,13 +3,15 @@ import { useId, useState, type ReactNode } from 'react'
 import { buttonStyles } from '@/components/ui/button-styles'
 import { Icon } from '@/components/ui/icon'
 import { useHeightTransition } from '@/hooks/use-height-transition'
+import { useMorphTransition } from '@/hooks/use-morph-transition'
 import type { Book } from '@/types/book'
 import { cn } from '@/utils/cn'
 import { preloadImage } from '@/utils/preload-image'
 
 import { formatPrice, getDisplayPrice, toLargeThumbnailUrl } from './book-format'
 
-const ITEM_MOBILE_LAYOUT = 'group flex flex-wrap items-start gap-4 border-b border-divider py-4'
+const ITEM_MOBILE_LAYOUT =
+  'group relative flex flex-wrap items-start gap-4 border-b border-divider py-4'
 const ITEM_DESKTOP_LAYOUT = 'lg:flex-nowrap lg:items-center lg:gap-0 lg:pr-4 lg:pb-3.75 lg:pl-12'
 const THUMBNAIL_FRAME = 'relative h-17 w-12 shrink-0 bg-light-gray'
 const THUMBNAIL_EXPANDED_SIZE =
@@ -76,6 +78,7 @@ type BookThumbnailProps = {
 }
 
 function BookThumbnail({ book, isExpanded, wishlistButton }: BookThumbnailProps) {
+  const thumbnailRef = useMorphTransition<HTMLDivElement>(isExpanded, { isEnabled: isExpanded })
   const [failedThumbnailUrls, setFailedThumbnailUrls] = useState<string[]>([])
   const thumbnailUrlCandidates = getThumbnailUrlCandidates(book.thumbnailUrl, isExpanded)
   const thumbnailUrl = thumbnailUrlCandidates.find((url) => !failedThumbnailUrls.includes(url))
@@ -85,7 +88,7 @@ function BookThumbnail({ book, isExpanded, wishlistButton }: BookThumbnailProps)
   }
 
   return (
-    <div className={cn(THUMBNAIL_FRAME, THUMBNAIL_EXPANDED_SIZE)}>
+    <div ref={thumbnailRef} className={cn(THUMBNAIL_FRAME, THUMBNAIL_EXPANDED_SIZE)}>
       {thumbnailUrl && (
         <img
           src={thumbnailUrl}
