@@ -28,6 +28,10 @@ function isSameLayoutBox(box: LayoutBox, otherBox: LayoutBox) {
   )
 }
 
+function isGrowing(previousBox: LayoutBox, currentBox: LayoutBox) {
+  return currentBox.width * currentBox.height > previousBox.width * previousBox.height
+}
+
 function toInvertedTransform(previousBox: LayoutBox, currentBox: LayoutBox) {
   const translate = `translate(${previousBox.left - currentBox.left}px, ${previousBox.top - currentBox.top}px)`
   const scale = `scale(${previousBox.width / currentBox.width}, ${previousBox.height / currentBox.height})`
@@ -35,12 +39,12 @@ function toInvertedTransform(previousBox: LayoutBox, currentBox: LayoutBox) {
 }
 
 type MorphTransitionOptions = {
-  isEnabled?: boolean
+  growOnly?: boolean
 }
 
 export function useMorphTransition<AnimatedElement extends HTMLElement>(
   trigger: unknown,
-  { isEnabled = true }: MorphTransitionOptions = {},
+  { growOnly = false }: MorphTransitionOptions = {},
 ) {
   const elementRef = useRef<AnimatedElement>(null)
   const previousBoxRef = useRef<LayoutBox | null>(null)
@@ -51,7 +55,8 @@ export function useMorphTransition<AnimatedElement extends HTMLElement>(
     const previousBox = previousBoxRef.current
     const currentBox = readLayoutBox(element)
     previousBoxRef.current = currentBox
-    if (!isEnabled || !previousBox || isSameLayoutBox(previousBox, currentBox)) return
+    if (!previousBox || isSameLayoutBox(previousBox, currentBox)) return
+    if (growOnly && !isGrowing(previousBox, currentBox)) return
     if (prefersReducedMotion() || typeof element.animate !== 'function') return
 
     const animation = element.animate(
@@ -62,7 +67,7 @@ export function useMorphTransition<AnimatedElement extends HTMLElement>(
       { duration: EXPAND_TRANSITION_DURATION_MS, easing: EXPAND_TRANSITION_EASING },
     )
     return () => animation.cancel()
-  }, [trigger, isEnabled])
+  }, [trigger, growOnly])
 
   return elementRef
 }

@@ -80,7 +80,7 @@ type BookThumbnailProps = {
 }
 
 function BookThumbnail({ book, isExpanded, wishlistButton }: BookThumbnailProps) {
-  const thumbnailRef = useMorphTransition<HTMLDivElement>(isExpanded, { isEnabled: isExpanded })
+  const thumbnailRef = useMorphTransition<HTMLDivElement>(isExpanded, { growOnly: true })
   const [failedThumbnailUrls, setFailedThumbnailUrls] = useState<string[]>([])
   const thumbnailUrlCandidates = getThumbnailUrlCandidates(book.thumbnailUrl, isExpanded)
   const thumbnailUrl = thumbnailUrlCandidates.find((url) => !failedThumbnailUrls.includes(url))
