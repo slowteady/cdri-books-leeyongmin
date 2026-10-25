@@ -64,6 +64,7 @@ export function SearchBar({ initialQuery, onSearch, onSelectHistoryEntry }: Sear
           placeholder="검색어를 입력하세요"
           onChange={(event) => searchBar.changeQuery(event.target.value)}
           onFocus={historyDropdown.open}
+          onClick={historyDropdown.open}
           onBlur={historyDropdown.close}
           onKeyDown={handleInputKeyDown}
           className="h-full min-w-0 flex-1 bg-transparent pr-5 text-caption text-fg-primary outline-none placeholder:text-fg-subtitle"

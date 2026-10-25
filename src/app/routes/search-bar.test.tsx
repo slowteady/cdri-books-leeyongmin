@@ -162,6 +162,18 @@ describe('검색창', () => {
     expect(screen.queryByRole('listbox', { name: '최근 검색 기록' })).not.toBeInTheDocument()
   })
 
+  test('기록 목록을 닫은 뒤 검색창을 다시 누르면 다시 펼친다', async () => {
+    useSearchHistoryStore.setState({ historyEntries: [{ query: '바다', searchTarget: null }] })
+    const { user } = renderApp('/')
+    const searchInput = await screen.findByRole('combobox', { name: '검색어' })
+    await user.click(searchInput)
+    await user.keyboard('{Escape}')
+
+    await user.click(searchInput)
+
+    expect(screen.getByRole('listbox', { name: '최근 검색 기록' })).toBeInTheDocument()
+  })
+
   test('방향키로 고른 기록은 Delete 키로 지울 수 있다', async () => {
     useSearchHistoryStore.setState({
       historyEntries: [
