@@ -9,7 +9,12 @@ export function WishlistList() {
   const wishlistList = useWishlistList()
 
   return (
-    <section aria-label="찜한 책 목록" className="mt-5">
+    <section
+      ref={wishlistList.wishlistSectionRef}
+      aria-label="찜한 책 목록"
+      tabIndex={-1}
+      className="mt-5 outline-none"
+    >
       <ResultCount label="찜한 책" count={wishlistList.totalCount} />
       <div className="mt-9">
         {wishlistList.totalCount === 0 ? (

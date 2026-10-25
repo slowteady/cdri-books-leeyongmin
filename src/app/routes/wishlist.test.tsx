@@ -94,6 +94,15 @@ describe('찜하기', () => {
     )
   })
 
+  test('하나 남은 책의 찜을 해제하면 포커스를 찜한 책 목록으로 옮긴다', async () => {
+    useWishlistStore.setState({ wishedBooks: [createBook({ id: 'only', title: '하나뿐인 책' })] })
+    const { user } = renderApp('/wishlist')
+
+    await user.click(await screen.findByRole('button', { name: '하나뿐인 책 찜하기' }))
+
+    await waitFor(() => expect(screen.getByRole('region', { name: '찜한 책 목록' })).toHaveFocus())
+  })
+
   test('찜 페이지는 검색 API를 다시 부르지 않고 찜한 시점의 책 정보를 보여준다', async () => {
     const fetchMock = mockBookSearchApi()
     useWishlistStore.setState({
