@@ -80,7 +80,7 @@ export function SearchBar({ initialQuery, searchKey, onSearch }: SearchBarProps)
           role="listbox"
           aria-label="최근 검색 기록"
           onMouseDown={(event) => event.preventDefault()}
-          className="absolute inset-x-0 top-full z-10 rounded-b-3xl bg-light-gray pt-2 pb-4"
+          className="absolute inset-x-0 top-full z-10 rounded-b-3xl bg-light-gray pt-1.75 pb-4"
         >
           {historyDropdown.historyEntries.map((entry, index) => (
             <SearchHistoryOption

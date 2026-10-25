@@ -6,7 +6,7 @@ import { cn } from '@/utils/cn'
 import { IconButton } from './icon-button'
 
 const PANEL_POSITION =
-  'absolute top-full right-0 mt-3.75 lg:right-auto lg:left-1/2 lg:-translate-x-1/2'
+  'absolute top-full right-0 mt-3.75 lg:right-auto lg:left-1/2 lg:ml-0.5 lg:-translate-x-1/2'
 const PANEL_SURFACE = 'z-20 w-popover rounded-lg bg-white px-6 py-9 shadow-popover'
 
 const FOCUSABLE_ELEMENT_SELECTOR =

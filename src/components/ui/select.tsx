@@ -88,7 +88,7 @@ export function Select<Value extends string>({
           role="listbox"
           aria-label={label}
           onMouseDown={(event) => event.preventDefault()}
-          className="absolute top-full left-0 z-10 mt-1.5 w-full bg-white shadow-dropdown"
+          className="absolute top-full left-0 z-10 mt-1.25 w-full bg-white shadow-dropdown"
         >
           {selectableOptions.map((option) => (
             <li

@@ -14,7 +14,7 @@ import {
 } from '@/features/book-search/utils/search-mode'
 
 const DETAIL_QUERY_INPUT_CLASS_NAME =
-  'h-9 min-w-0 flex-1 border-b border-primary px-2 text-body2 leading-5.5 text-fg-primary outline-none placeholder:text-fg-subtitle'
+  'h-9 min-w-0 flex-1 border-b border-primary pr-2 pl-2.25 text-body2 leading-5.5 text-fg-primary outline-none placeholder:text-fg-subtitle'
 
 const SEARCH_TARGET_OPTIONS: SelectOption<SearchTarget>[] = SEARCH_TARGETS.map((searchTarget) => ({
   value: searchTarget,
@@ -52,7 +52,7 @@ export function DetailSearchPopover({
       onOpenChange={detailSearchForm.changeOpen}
     >
       <form onSubmit={handleSubmit}>
-        <div className="flex gap-1">
+        <div className="mt-0.25 flex gap-1">
           <Select
             label="검색 조건"
             options={SEARCH_TARGET_OPTIONS}
@@ -68,7 +68,7 @@ export function DetailSearchPopover({
             className={DETAIL_QUERY_INPUT_CLASS_NAME}
           />
         </div>
-        <Button type="submit" size="md" className="mt-4 w-full">
+        <Button type="submit" size="md" className="mt-3.75 w-full">
           검색하기
         </Button>
       </form>
