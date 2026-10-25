@@ -4,6 +4,7 @@ import { BookList, BookListSkeleton } from '@/components/books/book-list'
 import { ResultCount } from '@/components/books/result-count'
 import { Button } from '@/components/ui/button'
 import { EmptyState } from '@/components/ui/empty-state'
+import { BOOK_SEARCH_PAGE_SIZE } from '@/config/constants'
 import {
   useSearchResults,
   type SearchResultsView,
@@ -59,7 +60,7 @@ function SearchResultsBody({ searchResultsView, renderWishlistButton }: SearchRe
         </div>
       )
     case 'loading':
-      return <BookListSkeleton label="검색 결과 불러오는 중" rowCount={3} />
+      return <BookListSkeleton label="검색 결과 불러오는 중" rowCount={BOOK_SEARCH_PAGE_SIZE} />
     case 'success':
       return (
         <BookList
@@ -67,6 +68,7 @@ function SearchResultsBody({ searchResultsView, renderWishlistButton }: SearchRe
           renderWishlistButton={renderWishlistButton}
           hasMore={searchResultsView.hasMore}
           isLoadingMore={searchResultsView.isLoadingMore}
+          loadingMoreRowCount={searchResultsView.nextPageBookCount}
           hasLoadMoreFailed={searchResultsView.hasLoadMoreFailed}
           onLoadMore={searchResultsView.loadMore}
         />

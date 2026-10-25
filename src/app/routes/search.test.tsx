@@ -75,6 +75,15 @@ describe('도서 검색 결과', () => {
     )
   })
 
+  test('검색하는 동안에는 한 페이지 분량(10권)의 자리를 미리 그린다', async () => {
+    mockFetch(() => new Promise<Response>(() => {}))
+
+    renderApp('/?q=테스트')
+
+    const loadingRows = await screen.findByRole('status', { name: '검색 결과 불러오는 중' })
+    expect(loadingRows.children).toHaveLength(10)
+  })
+
   test('검색하는 동안에는 결과 건수를 0건으로 알리지 않는다', async () => {
     mockFetch(() => new Promise<Response>(() => {}))
 
@@ -156,5 +165,18 @@ describe('도서 검색 결과', () => {
     await user.click(await screen.findByRole('button', { name: '더 보기' }))
 
     expect(await screen.findByRole('status', { name: '다음 목록 불러오는 중' })).toBeInTheDocument()
+  })
+
+  test('다음 목록을 불러오는 동안에는 남은 책 수만큼 자리를 미리 그린다', async () => {
+    mockFetch((requestUrl) => {
+      if (getRequestedPage(requestUrl) === 2) return new Promise<Response>(() => {})
+      return respondWithBookSearchPage(requestUrl, 15)
+    })
+    const { user } = renderApp('/?q=테스트')
+
+    await user.click(await screen.findByRole('button', { name: '더 보기' }))
+
+    const loadingRows = await screen.findByRole('status', { name: '다음 목록 불러오는 중' })
+    expect(loadingRows.children).toHaveLength(5)
   })
 })

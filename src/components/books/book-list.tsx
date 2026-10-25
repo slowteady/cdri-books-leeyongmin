@@ -13,6 +13,7 @@ type BookListProps = {
   renderWishlistButton: (book: Book) => ReactNode
   hasMore: boolean
   isLoadingMore?: boolean
+  loadingMoreRowCount?: number
   hasLoadMoreFailed?: boolean
   onLoadMore: () => void
 }
@@ -22,6 +23,7 @@ export function BookList({
   renderWishlistButton,
   hasMore,
   isLoadingMore = false,
+  loadingMoreRowCount = 0,
   hasLoadMoreFailed = false,
   onLoadMore,
 }: BookListProps) {
@@ -47,7 +49,9 @@ export function BookList({
           </li>
         ))}
       </ul>
-      {isLoadingMore && <BookListSkeleton label="다음 목록 불러오는 중" rowCount={2} />}
+      {isLoadingMore && (
+        <BookListSkeleton label="다음 목록 불러오는 중" rowCount={loadingMoreRowCount} />
+      )}
       {hasLoadMoreFailed && (
         <div role="alert" className="flex flex-col items-center gap-3 py-8">
           <p className="text-caption text-fg-secondary">다음 목록을 불러오지 못했어요.</p>

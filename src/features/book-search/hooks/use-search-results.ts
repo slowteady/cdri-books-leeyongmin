@@ -16,6 +16,7 @@ export type SearchResultsView =
       totalCount: number
       hasMore: boolean
       isLoadingMore: boolean
+      nextPageBookCount: number
       hasLoadMoreFailed: boolean
       loadMore: () => void
     }
@@ -46,6 +47,7 @@ export function useSearchResults(searchMode: SearchMode): SearchResultsView {
     totalCount: bookSearchResult.totalCount,
     hasMore: hasNextPage,
     isLoadingMore: isFetchingNextPage,
+    nextPageBookCount: bookSearchResult.nextPageBookCount,
     hasLoadMoreFailed: isFetchNextPageError,
     loadMore: () => void fetchNextPage(),
   }

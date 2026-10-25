@@ -71,6 +71,34 @@ describe('selectBookSearchResult', () => {
   })
 })
 
+describe('selectBookSearchResult의 다음 페이지 책 수', () => {
+  test('남은 결과가 한 페이지보다 많으면 한 페이지 분량을 돌려준다', () => {
+    const page = createBookSearchPage({ pageableCount: 100 })
+
+    expect(selectBookSearchResult({ pages: [page], pageParams: [1] }).nextPageBookCount).toBe(10)
+  })
+
+  test('마지막 페이지에 남은 결과가 적으면 그만큼만 돌려준다', () => {
+    const page = createBookSearchPage({ pageableCount: 25 })
+
+    const bookSearchResult = selectBookSearchResult({ pages: [page, page], pageParams: [1, 2] })
+
+    expect(bookSearchResult.nextPageBookCount).toBe(5)
+  })
+
+  test('Kakao 문서상 최대 페이지(50)까지 불러왔으면 0을 돌려준다', () => {
+    const page = createBookSearchPage({ pageableCount: 1000 })
+    const pages = Array.from({ length: 50 }, () => page)
+
+    const bookSearchResult = selectBookSearchResult({
+      pages,
+      pageParams: pages.map((_, index) => index + 1),
+    })
+
+    expect(bookSearchResult.nextPageBookCount).toBe(0)
+  })
+})
+
 describe('bookQueries.search', () => {
   test('검색 전에는 요청하지 않는다', () => {
     expect(bookQueries.search({ type: 'idle' }).queryFn).toBe(skipToken)

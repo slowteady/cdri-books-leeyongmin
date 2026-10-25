@@ -22,6 +22,18 @@ export function getNextSearchPage(lastPage: BookSearchPage, lastPageNumber: numb
 export type BookSearchResult = {
   books: Book[]
   totalCount: number
+  nextPageBookCount: number
+}
+
+function countNextPageBooks(pages: BookSearchPage[]) {
+  const lastPage = pages.at(-1)
+  if (!lastPage) return 0
+  const availableCount = Math.min(
+    lastPage.pageableCount,
+    MAX_BOOK_SEARCH_PAGE * BOOK_SEARCH_PAGE_SIZE,
+  )
+  const remainingCount = availableCount - pages.length * BOOK_SEARCH_PAGE_SIZE
+  return Math.max(0, Math.min(BOOK_SEARCH_PAGE_SIZE, remainingCount))
 }
 
 function removeDuplicateBooks(books: Book[]) {
@@ -39,6 +51,7 @@ export function selectBookSearchResult(
   return {
     books: removeDuplicateBooks(bookSearchData.pages.flatMap((page) => page.books)),
     totalCount: bookSearchData.pages[0]?.totalCount ?? 0,
+    nextPageBookCount: countNextPageBooks(bookSearchData.pages),
   }
 }
 
