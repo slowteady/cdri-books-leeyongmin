@@ -47,7 +47,7 @@ export function DetailSearchPopover({
     <Popover
       label="상세 검색"
       triggerLabel="상세검색"
-      triggerClassName={buttonStyles({ variant: 'outline', size: 'sm' })}
+      triggerClassName={buttonStyles({ variant: 'outline', size: 'sm', className: 'mt-0.75' })}
       isOpen={detailSearchForm.isOpen}
       onOpenChange={detailSearchForm.changeOpen}
     >

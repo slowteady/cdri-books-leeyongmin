@@ -17,7 +17,7 @@ const ACTIONS_MOBILE_LAYOUT = 'flex basis-full flex-wrap items-center gap-2'
 const ACTIONS_DESKTOP_LAYOUT =
   'lg:ml-6 lg:basis-auto lg:flex-nowrap lg:gap-0 lg:group-data-expanded:flex-col lg:group-data-expanded:items-end'
 const EXPANDED_PRICES_LAYOUT =
-  'hidden basis-full flex-col items-start gap-2 group-data-expanded:flex lg:mr-1 lg:basis-auto lg:items-end lg:group-data-expanded:mt-auto'
+  'hidden basis-full flex-col items-start gap-2 group-data-expanded:flex lg:mr-1 lg:basis-auto lg:group-data-expanded:mt-auto'
 const ITEM_DESKTOP_EXPANDED_LAYOUT =
   'lg:data-expanded:items-stretch lg:data-expanded:pt-6 lg:data-expanded:pb-9.75 lg:data-expanded:pl-13.5'
 
@@ -193,11 +193,14 @@ function BookActions({ book, isExpanded, descriptionId, onToggleExpanded }: Book
         className={buttonStyles({
           variant: 'secondary',
           className:
-            'flex-1 lg:ml-2 lg:w-28.75 lg:flex-none lg:group-data-expanded:order-first lg:group-data-expanded:mt-0.5 lg:group-data-expanded:ml-0',
+            'flex-1 lg:ml-2 lg:w-28.75 lg:flex-none lg:pr-4.25 lg:group-data-expanded:order-first lg:group-data-expanded:mt-0.5 lg:group-data-expanded:ml-0',
         })}
       >
         상세보기
-        <Icon name="chevronDown" className="text-ui-gray group-data-expanded:rotate-180" />
+        <Icon
+          name="chevronDown"
+          className="translate-y-0.5 text-ui-gray group-data-expanded:translate-y-0 group-data-expanded:rotate-180"
+        />
       </button>
     </div>
   )
