@@ -104,7 +104,7 @@ describe('찜하기', () => {
     renderApp('/wishlist')
 
     expect(await screen.findByRole('heading', { name: '찜할 때 본 제목' })).toBeInTheDocument()
-    expect(screen.getAllByText('9,900원').length).toBeGreaterThan(0)
+    expect(screen.getByText('9,900원', { selector: 'p' })).toBeInTheDocument()
     expect(fetchMock).not.toHaveBeenCalled()
   })
 })

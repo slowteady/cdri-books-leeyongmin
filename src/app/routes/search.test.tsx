@@ -24,7 +24,7 @@ describe('도서 검색 결과', () => {
 
     renderApp('/?q=테스트')
 
-    expect(await screen.findByText('테스트 책 1')).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: '테스트 책 1' })).toBeInTheDocument()
     expect(screen.getAllByRole('article')).toHaveLength(10)
     expect(screen.getByRole('status')).toHaveTextContent('도서 검색 결과총 25건')
   })
@@ -34,10 +34,10 @@ describe('도서 검색 결과', () => {
     const { user } = renderApp('/?q=테스트')
 
     await user.click(await screen.findByRole('button', { name: '더 보기' }))
-    expect(await screen.findByText('테스트 책 20')).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: '테스트 책 20' })).toBeInTheDocument()
 
     await user.click(await screen.findByRole('button', { name: '더 보기' }))
-    expect(await screen.findByText('테스트 책 25')).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: '테스트 책 25' })).toBeInTheDocument()
 
     expect(screen.getAllByRole('article')).toHaveLength(25)
     expect(screen.queryByRole('button', { name: '더 보기' })).not.toBeInTheDocument()
@@ -64,15 +64,15 @@ describe('도서 검색 결과', () => {
   test('다른 검색 결과로 이동하면 펼쳐 둔 상세보기를 이어서 펼치지 않는다', async () => {
     mockBookSearchApi(3)
     const { router, user } = renderApp('/?q=바다')
-    await screen.findByText('테스트 책 1')
+    await screen.findByRole('heading', { name: '테스트 책 1' })
     await act(() => router.navigate('/?q=숲'))
-    await screen.findByText('테스트 책 1')
+    await screen.findByRole('heading', { name: '테스트 책 1' })
     const [firstToggleButton] = screen.getAllByRole('button', { name: '상세보기' })
     await user.click(firstToggleButton)
 
     await act(() => router.navigate(-1))
 
-    expect(await screen.findByText('테스트 책 1')).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: '테스트 책 1' })).toBeInTheDocument()
     expect(screen.getAllByRole('button', { name: '상세보기' })[0]).toHaveAttribute(
       'aria-expanded',
       'false',
@@ -116,7 +116,7 @@ describe('도서 검색 결과', () => {
     )
     await user.click(screen.getByRole('button', { name: '다시 시도' }))
 
-    expect(await screen.findByText('테스트 책 1')).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: '테스트 책 1' })).toBeInTheDocument()
   })
 
   test('API 키가 잘못되면 .env 확인을 안내하고 다시 시도 버튼은 보여주지 않는다', async () => {
@@ -146,7 +146,7 @@ describe('도서 검색 결과', () => {
     expect(screen.getAllByRole('article')).toHaveLength(10)
 
     await user.click(screen.getByRole('button', { name: '다시 시도' }))
-    expect(await screen.findByText('테스트 책 15')).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: '테스트 책 15' })).toBeInTheDocument()
   })
 
   test('다음 목록을 불러오는 동안에는 불러오는 중임을 알린다', async () => {

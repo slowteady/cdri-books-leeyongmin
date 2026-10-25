@@ -26,7 +26,7 @@ describe('검색창', () => {
     await user.type(await findSearchInput(), '노르웨이{Enter}')
 
     expect(router.state.location.search).toBe(`?q=${encodeURIComponent('노르웨이')}`)
-    expect(await screen.findByText('테스트 책 1')).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: '테스트 책 1' })).toBeInTheDocument()
     expect(getSearchInput()).toHaveValue('노르웨이')
   })
 
@@ -135,7 +135,7 @@ describe('검색창', () => {
     await user.keyboard('{Enter}')
 
     expect(router.state.location.search).toBe(`?q=${encodeURIComponent('숲')}`)
-    await screen.findByText('테스트 책 1')
+    await screen.findByRole('heading', { name: '테스트 책 1' })
     expect(fetchMock).toHaveBeenCalledOnce()
   })
 
@@ -244,7 +244,7 @@ describe('검색창', () => {
     const searchInput = await findSearchInput()
 
     await user.type(searchInput, '바다{Enter}')
-    await screen.findByText('테스트 책 1')
+    await screen.findByRole('heading', { name: '테스트 책 1' })
 
     expect(getSearchInput()).toHaveFocus()
   })

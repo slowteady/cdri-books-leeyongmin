@@ -77,7 +77,7 @@ describe('BookListItem', () => {
 
     expect(screen.getByRole('heading', { name: '노르웨이의 숲' })).toBeInTheDocument()
     expect(screen.getByText('무라카미 하루키')).toBeInTheDocument()
-    expect(screen.getAllByText('13,500원').length).toBeGreaterThan(0)
+    expect(screen.getByText('13,500원', { selector: 'p' })).toBeInTheDocument()
   })
 
   test('책 제목은 페이지 제목 바로 아래 단계이고, 책 소개는 그 아래 단계다', () => {
