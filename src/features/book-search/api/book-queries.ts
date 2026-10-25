@@ -10,7 +10,7 @@ import type { Book } from '@/types/book'
 
 import { fetchBooks, type BookSearchPage } from './fetch-books'
 
-export type BookSearchResult = {
+type BookSearchResult = {
   books: Book[]
   totalCount: number
   nextPageBookCount: number
