@@ -1,12 +1,14 @@
 import { useState } from 'react'
 import { useLocation } from 'react-router'
 
-export function useLastVisitedPath(tabPathname: string) {
-  const { pathname, search } = useLocation()
-  const [lastVisitedPath, setLastVisitedPath] = useState(tabPathname)
-  const currentPath = pathname + search
+import { toPathWithSearch } from '@/utils/to-path-with-search'
 
-  if (pathname === tabPathname && currentPath !== lastVisitedPath) {
+export function useLastVisitedPath(tabPathname: string) {
+  const location = useLocation()
+  const [lastVisitedPath, setLastVisitedPath] = useState(tabPathname)
+  const currentPath = toPathWithSearch(location)
+
+  if (location.pathname === tabPathname && currentPath !== lastVisitedPath) {
     setLastVisitedPath(currentPath)
   }
 

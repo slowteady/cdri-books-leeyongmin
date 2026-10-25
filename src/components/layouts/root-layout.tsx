@@ -1,10 +1,8 @@
-import { Outlet, ScrollRestoration, type Location } from 'react-router'
+import { Outlet, ScrollRestoration } from 'react-router'
+
+import { toPathWithSearch } from '@/utils/to-path-with-search'
 
 import { AppShell } from './app-shell'
-
-function toScrollPositionKey({ pathname, search }: Location) {
-  return pathname + search
-}
 
 export function RootLayout() {
   return (
@@ -12,7 +10,7 @@ export function RootLayout() {
       <AppShell>
         <Outlet />
       </AppShell>
-      <ScrollRestoration getKey={toScrollPositionKey} />
+      <ScrollRestoration getKey={toPathWithSearch} />
     </>
   )
 }

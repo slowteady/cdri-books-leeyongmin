@@ -1,16 +1,17 @@
-import { useState, type ReactNode } from 'react'
+import { useState } from 'react'
 
 import { Button } from '@/components/ui/button'
+import { ErrorState } from '@/components/ui/error-state'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useIntersectionObserver } from '@/hooks/use-intersection-observer'
 import type { Book } from '@/types/book'
 import { cn } from '@/utils/cn'
 
-import { BookListItem } from './book-list-item'
+import { BookListItem, type RenderWishlistButton } from './book-list-item'
 
 type BookListProps = {
   books: Book[]
-  renderWishlistButton: (book: Book) => ReactNode
+  renderWishlistButton: RenderWishlistButton
   hasMore: boolean
   isLoadingMore?: boolean
   loadingMoreRowCount?: number
@@ -53,12 +54,11 @@ export function BookList({
         <BookListSkeleton label="다음 목록 불러오는 중" rowCount={loadingMoreRowCount} />
       )}
       {hasLoadMoreFailed && (
-        <div role="alert" className="flex flex-col items-center gap-3 py-8">
-          <p className="text-caption text-fg-secondary">다음 목록을 불러오지 못했어요.</p>
-          <Button variant="secondary" onClick={onLoadMore}>
-            다시 시도
-          </Button>
-        </div>
+        <ErrorState
+          message="다음 목록을 불러오지 못했어요."
+          onRetry={onLoadMore}
+          className="gap-3 py-8"
+        />
       )}
       {showsLoadMoreButton && (
         <div className="flex justify-center py-8">

@@ -24,11 +24,13 @@ const EXPANDED_PRICES_LAYOUT =
 const ITEM_DESKTOP_EXPANDED_LAYOUT =
   'lg:data-expanded:items-stretch lg:data-expanded:pt-6 lg:data-expanded:pb-9.75 lg:data-expanded:pl-13.5'
 
+export type RenderWishlistButton = (book: Book) => ReactNode
+
 type BookListItemProps = {
   book: Book
   isExpanded: boolean
   onToggleExpanded: (bookId: string) => void
-  renderWishlistButton: (book: Book) => ReactNode
+  renderWishlistButton: RenderWishlistButton
 }
 
 export function BookListItem({

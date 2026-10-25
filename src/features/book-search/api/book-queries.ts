@@ -10,29 +10,31 @@ import type { Book } from '@/types/book'
 
 import { fetchBooks, type BookSearchPage } from './fetch-books'
 
-export function getNextSearchPage(lastPage: BookSearchPage, lastPageNumber: number) {
-  const lastAvailablePageNumber = Math.min(
-    MAX_BOOK_SEARCH_PAGE,
-    Math.ceil(lastPage.pageableCount / BOOK_SEARCH_PAGE_SIZE),
-  )
-  if (lastPage.isEnd || lastPageNumber >= lastAvailablePageNumber) return undefined
-  return lastPageNumber + 1
-}
-
 export type BookSearchResult = {
   books: Book[]
   totalCount: number
   nextPageBookCount: number
 }
 
+const MAX_AVAILABLE_BOOK_COUNT = MAX_BOOK_SEARCH_PAGE * BOOK_SEARCH_PAGE_SIZE
+
+function toAvailableBookCount(pageableCount: number) {
+  return Math.min(pageableCount, MAX_AVAILABLE_BOOK_COUNT)
+}
+
+export function getNextSearchPage(lastPage: BookSearchPage, lastPageNumber: number) {
+  const lastAvailablePageNumber = Math.ceil(
+    toAvailableBookCount(lastPage.pageableCount) / BOOK_SEARCH_PAGE_SIZE,
+  )
+  if (lastPage.isEnd || lastPageNumber >= lastAvailablePageNumber) return undefined
+  return lastPageNumber + 1
+}
+
 function countNextPageBooks(pages: BookSearchPage[]) {
   const lastPage = pages.at(-1)
   if (!lastPage) return 0
-  const availableCount = Math.min(
-    lastPage.pageableCount,
-    MAX_BOOK_SEARCH_PAGE * BOOK_SEARCH_PAGE_SIZE,
-  )
-  const remainingCount = availableCount - pages.length * BOOK_SEARCH_PAGE_SIZE
+  const remainingCount =
+    toAvailableBookCount(lastPage.pageableCount) - pages.length * BOOK_SEARCH_PAGE_SIZE
   return Math.max(0, Math.min(BOOK_SEARCH_PAGE_SIZE, remainingCount))
 }
 
