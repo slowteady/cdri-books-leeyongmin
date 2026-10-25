@@ -21,7 +21,7 @@ export function WishlistList() {
       ref={registerWishlistSection}
       aria-label="찜한 책 목록"
       tabIndex={-1}
-      className="mt-5 outline-none"
+      className="mt-3 outline-none"
     >
       <ResultCount label="찜한 책" count={totalCount} />
       <div className="mt-9">
