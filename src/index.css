@@ -49,6 +49,8 @@
   --shadow-dropdown: 0 0 4px rgb(0 0 0 / 0.25);
 }
 
+@custom-variant aria-current-page (&[aria-current='page']);
+
 @utility w-popover {
   width: min(22.5rem, calc(100vw - 2rem));
 }

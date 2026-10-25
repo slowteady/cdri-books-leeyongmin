@@ -1,6 +1,6 @@
 import { Link } from 'react-router'
 
-import { AppShell } from '@/components/layouts/root-layout'
+import { AppShell } from '@/components/layouts/app-shell'
 import { buttonStyles } from '@/components/ui/button-styles'
 
 export function RouteErrorPage() {

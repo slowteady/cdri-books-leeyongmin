@@ -1,3 +1,5 @@
+import { Skeleton } from '@/components/ui/skeleton'
+
 type ResultCountProps = {
   label: string
   count: number | null
@@ -20,8 +22,9 @@ export function ResultCount({ label, count }: ResultCountProps) {
 
 function CountSkeleton() {
   return (
-    <span className="my-1 h-4 w-16 rounded-sm bg-light-gray motion-safe:animate-pulse">
+    <span>
       <span className="sr-only">건수 불러오는 중</span>
+      <Skeleton className="my-1 block h-4 w-16 rounded-sm" />
     </span>
   )
 }

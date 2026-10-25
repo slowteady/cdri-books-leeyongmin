@@ -10,6 +10,11 @@ import { formatPrice, getDisplayPrice, toLargeThumbnailUrl } from './book-format
 
 const ITEM_MOBILE_LAYOUT = 'group flex flex-wrap items-start gap-4 border-b border-divider py-4'
 const ITEM_DESKTOP_LAYOUT = 'lg:flex-nowrap lg:items-center lg:gap-0 lg:pr-4 lg:pb-3.75 lg:pl-12'
+const ACTIONS_MOBILE_LAYOUT = 'flex basis-full flex-wrap items-center gap-2'
+const ACTIONS_DESKTOP_LAYOUT =
+  'lg:ml-6 lg:basis-auto lg:flex-nowrap lg:gap-0 lg:group-data-expanded:flex-col lg:group-data-expanded:items-end'
+const EXPANDED_PRICES_LAYOUT =
+  'hidden basis-full flex-col items-start gap-2 group-data-expanded:flex lg:mr-1 lg:basis-auto lg:items-end lg:group-data-expanded:mt-auto'
 const ITEM_DESKTOP_EXPANDED_LAYOUT =
   'lg:data-expanded:items-stretch lg:data-expanded:pt-6 lg:data-expanded:pb-9.75 lg:data-expanded:pl-13.5'
 
@@ -152,11 +157,11 @@ function BookActions({ book, isExpanded, descriptionId, onToggleExpanded }: Book
   const hasDiscount = book.salePrice !== null
 
   return (
-    <div className="flex basis-full flex-wrap items-center gap-2 lg:ml-6 lg:basis-auto lg:flex-nowrap lg:gap-0 lg:group-data-expanded:flex-col lg:group-data-expanded:items-end">
+    <div className={cn(ACTIONS_MOBILE_LAYOUT, ACTIONS_DESKTOP_LAYOUT)}>
       <p className="basis-full text-title3 text-fg-primary group-data-expanded:hidden lg:mr-14 lg:basis-auto">
         {formatPrice(getDisplayPrice(book))}
       </p>
-      <div className="hidden basis-full flex-col items-start gap-2 group-data-expanded:flex lg:mr-1 lg:basis-auto lg:items-end lg:group-data-expanded:mt-auto">
+      <div className={EXPANDED_PRICES_LAYOUT}>
         <PriceRow label="원가">
           <OriginalPrice price={book.originalPrice} hasDiscount={hasDiscount} />
         </PriceRow>

@@ -1,8 +1,13 @@
 import { useEffect, useId, useRef, type KeyboardEvent, type ReactNode } from 'react'
 
 import { useOutsidePointerDown } from '@/hooks/use-outside-pointer-down'
+import { cn } from '@/utils/cn'
 
 import { IconButton } from './icon-button'
+
+const PANEL_POSITION =
+  'absolute top-full right-0 mt-3.75 lg:right-auto lg:left-1/2 lg:-translate-x-1/2'
+const PANEL_SURFACE = 'z-20 w-popover rounded-lg bg-white px-6 py-9 shadow-popover'
 
 const FOCUSABLE_ELEMENT_SELECTOR =
   'button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
@@ -63,7 +68,7 @@ export function Popover({
           id={panelId}
           role="dialog"
           aria-label={label}
-          className="absolute top-full right-0 z-20 mt-3.75 w-popover rounded-lg bg-white px-6 py-9 shadow-popover lg:right-auto lg:left-1/2 lg:-translate-x-1/2"
+          className={cn(PANEL_POSITION, PANEL_SURFACE)}
         >
           {children}
           <IconButton

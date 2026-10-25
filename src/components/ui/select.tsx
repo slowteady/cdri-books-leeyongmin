@@ -1,8 +1,12 @@
 import { useId, useState, type KeyboardEvent } from 'react'
 
 import { useListboxNavigation } from '@/hooks/use-listbox-navigation'
+import { cn } from '@/utils/cn'
 
 import { Icon } from './icon'
+
+const TRIGGER_LAYOUT = 'flex h-9 w-full cursor-pointer items-center justify-between px-2'
+const TRIGGER_TEXT = 'border-b border-divider text-body2 leading-5 font-bold text-fg-primary'
 
 export type SelectOption<Value extends string> = {
   value: Value
@@ -73,7 +77,7 @@ export function Select<Value extends string>({
         onClick={() => (isOpen ? close() : setIsOpen(true))}
         onKeyDown={handleTriggerKeyDown}
         onBlur={close}
-        className="flex h-9 w-full cursor-pointer items-center justify-between border-b border-divider px-2 text-body2 leading-5 font-bold text-fg-primary"
+        className={cn(TRIGGER_LAYOUT, TRIGGER_TEXT)}
       >
         {selectedOption?.label}
         <Icon name="chevronDownSmall" className="text-ui-gray" />

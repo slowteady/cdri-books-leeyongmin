@@ -1,8 +1,10 @@
 import { useState, type ReactNode } from 'react'
 
 import { Button } from '@/components/ui/button'
+import { Skeleton } from '@/components/ui/skeleton'
 import { useIntersectionObserver } from '@/hooks/use-intersection-observer'
 import type { Book } from '@/types/book'
+import { cn } from '@/utils/cn'
 
 import { BookListItem } from './book-list-item'
 
@@ -64,6 +66,9 @@ export function BookList({
   )
 }
 
+const SKELETON_ROW_MOBILE_LAYOUT = 'flex flex-wrap items-center gap-4 border-b border-divider py-4'
+const SKELETON_ROW_DESKTOP_LAYOUT = 'lg:h-25 lg:flex-nowrap lg:gap-12 lg:py-0 lg:pr-4 lg:pl-12'
+
 type BookListSkeletonProps = {
   label: string
   rowCount: number
@@ -73,13 +78,10 @@ export function BookListSkeleton({ label, rowCount }: BookListSkeletonProps) {
   return (
     <div role="status" aria-label={label}>
       {Array.from({ length: rowCount }, (_, rowIndex) => (
-        <div
-          key={rowIndex}
-          className="flex flex-wrap items-center gap-4 border-b border-divider py-4 motion-safe:animate-pulse lg:h-25 lg:flex-nowrap lg:gap-12 lg:py-0 lg:pr-4 lg:pl-12"
-        >
-          <div className="h-17 w-12 shrink-0 bg-light-gray" />
-          <div className="h-4.5 min-w-0 flex-1 rounded-lg bg-light-gray" />
-          <div className="h-12 basis-full rounded-lg bg-light-gray lg:w-60 lg:basis-auto" />
+        <div key={rowIndex} className={cn(SKELETON_ROW_MOBILE_LAYOUT, SKELETON_ROW_DESKTOP_LAYOUT)}>
+          <Skeleton className="h-17 w-12 shrink-0" />
+          <Skeleton className="h-4.5 min-w-0 flex-1 rounded-lg" />
+          <Skeleton className="h-12 basis-full rounded-lg lg:w-60 lg:basis-auto" />
         </div>
       ))}
     </div>
