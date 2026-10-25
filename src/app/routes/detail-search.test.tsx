@@ -1,18 +1,10 @@
 import { createEvent, fireEvent, screen, within } from '@testing-library/react'
 
-import { createKakaoBookSearchResponse } from '@/testing/data/kakao-books'
-import { mockFetch } from '@/testing/mock-fetch'
 import { useSearchHistoryStore } from '@/features/book-search/stores/search-history-store'
-import { renderApp } from '@/testing/test-utils'
+import { mockBookSearchApi } from '@/testing/mock-book-search-api'
+import { renderApp, type AppUser } from '@/testing/test-utils'
 
-function mockBookSearchApi() {
-  return mockFetch((requestUrl) => {
-    const page = Number(requestUrl.searchParams.get('page'))
-    return Response.json(createKakaoBookSearchResponse({ page, totalCount: 3 }))
-  })
-}
-
-async function openDetailSearch(user: ReturnType<typeof renderApp>['user']) {
+async function openDetailSearch(user: AppUser) {
   await user.click(await screen.findByRole('button', { name: '상세검색' }))
   return screen.getByRole('dialog', { name: '상세 검색' })
 }

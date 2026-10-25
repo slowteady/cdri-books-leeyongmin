@@ -6,6 +6,8 @@ import { RouterProvider } from 'react-router/dom'
 
 import { routes } from '@/app/router'
 
+export type AppUser = ReturnType<typeof userEvent.setup>
+
 export function renderApp(initialPath = '/') {
   const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } })
   const router = createMemoryRouter(routes, { initialEntries: [initialPath] })

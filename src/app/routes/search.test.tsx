@@ -1,15 +1,12 @@
 import { act, screen } from '@testing-library/react'
 
-import { createKakaoBookSearchResponse } from '@/testing/data/kakao-books'
+import {
+  getRequestedPage,
+  mockBookSearchApi,
+  respondWithBookSearchPage,
+} from '@/testing/mock-book-search-api'
 import { mockFetch } from '@/testing/mock-fetch'
 import { renderApp } from '@/testing/test-utils'
-
-function mockBookSearchApi(totalCount: number) {
-  return mockFetch((requestUrl) => {
-    const page = Number(requestUrl.searchParams.get('page'))
-    return Response.json(createKakaoBookSearchResponse({ page, totalCount }))
-  })
-}
 
 describe('도서 검색 결과', () => {
   test('검색 전에는 검색된 결과가 없다고 보여준다', async () => {
@@ -107,8 +104,7 @@ describe('도서 검색 결과', () => {
     mockFetch((requestUrl) => {
       requestCount += 1
       if (requestCount === 1) return new Response(null, { status: 503 })
-      const page = Number(requestUrl.searchParams.get('page'))
-      return Response.json(createKakaoBookSearchResponse({ page, totalCount: 3 }))
+      return respondWithBookSearchPage(requestUrl)
     })
     const { user } = renderApp('/?q=테스트')
 
@@ -134,12 +130,11 @@ describe('도서 검색 결과', () => {
   test('다음 목록을 불러오지 못하면 받은 목록은 그대로 두고 다시 시도할 수 있다', async () => {
     let shouldFailNextPage = true
     mockFetch((requestUrl) => {
-      const page = Number(requestUrl.searchParams.get('page'))
-      if (page === 2 && shouldFailNextPage) {
+      if (getRequestedPage(requestUrl) === 2 && shouldFailNextPage) {
         shouldFailNextPage = false
         return new Response(null, { status: 503 })
       }
-      return Response.json(createKakaoBookSearchResponse({ page, totalCount: 15 }))
+      return respondWithBookSearchPage(requestUrl, 15)
     })
     const { user } = renderApp('/?q=테스트')
 
@@ -153,9 +148,8 @@ describe('도서 검색 결과', () => {
 
   test('다음 목록을 불러오는 동안에는 불러오는 중임을 알린다', async () => {
     mockFetch((requestUrl) => {
-      const page = Number(requestUrl.searchParams.get('page'))
-      if (page === 2) return new Promise<Response>(() => {})
-      return Response.json(createKakaoBookSearchResponse({ page, totalCount: 15 }))
+      if (getRequestedPage(requestUrl) === 2) return new Promise<Response>(() => {})
+      return respondWithBookSearchPage(requestUrl, 15)
     })
     const { user } = renderApp('/?q=테스트')
 

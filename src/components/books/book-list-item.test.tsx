@@ -19,7 +19,7 @@ function renderBookListItem({ book = createBook(), isExpanded = false } = {}) {
   return { container, handleToggleExpanded }
 }
 
-function renderExpanded(overrides: Partial<Book>) {
+function renderExpanded(overrides: Partial<Book> = {}) {
   return renderBookListItem({ book: createBook(overrides), isExpanded: true })
 }
 
@@ -52,7 +52,7 @@ describe('BookListItem', () => {
   })
 
   test('책 제목은 페이지 제목 바로 아래 단계이고, 책 소개는 그 아래 단계다', () => {
-    renderExpanded({})
+    renderExpanded()
 
     expect(screen.getByRole('heading', { level: 2, name: '노르웨이의 숲' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { level: 3, name: '책 소개' })).toBeInTheDocument()
@@ -82,7 +82,7 @@ describe('BookListItem', () => {
   })
 
   test('펼치면 책 소개와 원가, 할인가를 보여준다', () => {
-    renderExpanded({})
+    renderExpanded()
 
     expect(screen.getByRole('button', { name: '상세보기' })).toHaveAttribute(
       'aria-expanded',

@@ -1,7 +1,6 @@
-import { createBook } from '@/testing/data/books'
-
 import { QueryClient, skipToken } from '@tanstack/react-query'
 
+import { createBook } from '@/testing/data/books'
 import { mockFetch } from '@/testing/mock-fetch'
 
 import { bookQueries, getNextSearchPage, selectBookSearchResult } from './book-queries'

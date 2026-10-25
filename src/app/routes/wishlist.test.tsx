@@ -2,16 +2,8 @@ import { screen, waitFor } from '@testing-library/react'
 
 import { useWishlistStore } from '@/features/wishlist/stores/wishlist-store'
 import { createBook } from '@/testing/data/books'
-import { createKakaoBookSearchResponse } from '@/testing/data/kakao-books'
-import { mockFetch } from '@/testing/mock-fetch'
+import { mockBookSearchApi } from '@/testing/mock-book-search-api'
 import { renderApp } from '@/testing/test-utils'
-
-function mockBookSearchApi(totalCount = 3) {
-  return mockFetch((requestUrl) => {
-    const page = Number(requestUrl.searchParams.get('page'))
-    return Response.json(createKakaoBookSearchResponse({ page, totalCount }))
-  })
-}
 
 describe('찜하기', () => {
   test('검색 결과의 하트를 누르면 찜하고, 다시 누르면 찜을 해제한다', async () => {
