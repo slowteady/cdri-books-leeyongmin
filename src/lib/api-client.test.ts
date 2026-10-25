@@ -9,7 +9,7 @@ describe('getJson', () => {
     await expect(getJson('/api/books')).resolves.toEqual({ documents: [] })
   })
 
-  test('실패하면 상태 코드와 Kakao 에러 종류를 담은 HttpError를 던진다', async () => {
+  test('실패하면 상태 코드를 담은 HttpError를 던진다', async () => {
     mockFetch(() =>
       Response.json({ errorType: 'RequestThrottled', message: 'quota' }, { status: 429 }),
     )
@@ -17,13 +17,13 @@ describe('getJson', () => {
     const error = await getJson('/api/books').catch((thrownError: unknown) => thrownError)
 
     expect(error).toBeInstanceOf(HttpError)
-    expect(error).toMatchObject({ status: 429, errorType: 'RequestThrottled' })
+    expect(error).toMatchObject({ status: 429 })
   })
 
   test('에러 본문이 JSON이 아니어도 상태 코드로 HttpError를 던진다', async () => {
     mockFetch(() => new Response('Bad Gateway', { status: 502 }))
 
-    await expect(getJson('/api/books')).rejects.toMatchObject({ status: 502, errorType: null })
+    await expect(getJson('/api/books')).rejects.toMatchObject({ status: 502 })
   })
 
   test('네트워크에 연결하지 못하면 NetworkError를 던진다', async () => {

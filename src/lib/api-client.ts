@@ -1,12 +1,18 @@
+export const HTTP_STATUS = {
+  BAD_REQUEST: 400,
+  UNAUTHORIZED: 401,
+  FORBIDDEN: 403,
+  TOO_MANY_REQUESTS: 429,
+  SERVER_ERROR_MIN: 500,
+} as const
+
 export class HttpError extends Error {
   readonly status: number
-  readonly errorType: string | null
 
-  constructor(status: number, errorType: string | null) {
+  constructor(status: number) {
     super(`HTTP ${status}`)
     this.name = 'HttpError'
     this.status = status
-    this.errorType = errorType
   }
 }
 
@@ -30,15 +36,8 @@ async function requestOrThrowNetworkError(url: string, init?: RequestInit) {
   }
 }
 
-type KakaoErrorBody = { errorType?: unknown }
-
-async function readErrorType(response: Response) {
-  const errorBody = (await response.json().catch(() => null)) as KakaoErrorBody | null
-  return typeof errorBody?.errorType === 'string' ? errorBody.errorType : null
-}
-
 export async function getJson<T>(url: string, init?: RequestInit): Promise<T> {
   const response = await requestOrThrowNetworkError(url, init)
-  if (!response.ok) throw new HttpError(response.status, await readErrorType(response))
+  if (!response.ok) throw new HttpError(response.status)
   return (await response.json()) as T
 }
