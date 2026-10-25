@@ -4,6 +4,7 @@ import { persist } from 'zustand/middleware'
 import { MAX_SEARCH_HISTORY_COUNT } from '@/config/constants'
 import type { SearchHistoryEntry } from '@/features/book-search/utils/search-history-entry'
 import { isSearchTarget } from '@/features/book-search/utils/search-mode'
+import { isRecord } from '@/utils/is-record'
 
 export const SEARCH_HISTORY_STORAGE_KEY = 'cdri-books:search-history'
 
@@ -23,14 +24,14 @@ export function prependHistoryEntry(
 }
 
 function isSearchHistoryEntry(value: unknown): value is SearchHistoryEntry {
-  if (typeof value !== 'object' || value === null) return false
-  const { query, searchTarget } = value as Record<string, unknown>
+  if (!isRecord(value)) return false
+  const { query, searchTarget } = value
   return typeof query === 'string' && (searchTarget === null || isSearchTarget(searchTarget))
 }
 
 function readStoredHistoryEntries(storedState: unknown) {
-  if (typeof storedState !== 'object' || storedState === null) return []
-  const { historyEntries } = storedState as Record<string, unknown>
+  if (!isRecord(storedState)) return []
+  const { historyEntries } = storedState
   return Array.isArray(historyEntries) ? historyEntries.filter(isSearchHistoryEntry) : []
 }
 

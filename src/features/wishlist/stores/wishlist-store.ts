@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
 import type { Book } from '@/types/book'
+import { isRecord } from '@/utils/is-record'
 
 export const WISHLIST_STORAGE_KEY = 'cdri-books:wishlist'
 
@@ -14,25 +15,28 @@ function isNumberOrNull(value: unknown) {
 }
 
 function isBook(value: unknown): value is Book {
-  if (typeof value !== 'object' || value === null) return false
-  const book = value as Record<string, unknown>
+  if (!isRecord(value)) return false
   return (
-    typeof book.id === 'string' &&
-    typeof book.title === 'string' &&
-    Array.isArray(book.authors) &&
-    book.authors.every((author) => typeof author === 'string') &&
-    typeof book.publisher === 'string' &&
-    isStringOrNull(book.description) &&
-    typeof book.detailUrl === 'string' &&
-    isStringOrNull(book.thumbnailUrl) &&
-    isNumberOrNull(book.originalPrice) &&
-    isNumberOrNull(book.salePrice)
+    typeof value.id === 'string' &&
+    typeof value.title === 'string' &&
+    Array.isArray(value.authors) &&
+    value.authors.every((author) => typeof author === 'string') &&
+    typeof value.publisher === 'string' &&
+    isStringOrNull(value.description) &&
+    typeof value.detailUrl === 'string' &&
+    isStringOrNull(value.thumbnailUrl) &&
+    isNumberOrNull(value.originalPrice) &&
+    isNumberOrNull(value.salePrice)
   )
 }
 
+function containsBook(books: Book[], bookId: string) {
+  return books.some((book) => book.id === bookId)
+}
+
 function readStoredWishedBooks(storedState: unknown) {
-  if (typeof storedState !== 'object' || storedState === null) return []
-  const { wishedBooks } = storedState as Record<string, unknown>
+  if (!isRecord(storedState)) return []
+  const { wishedBooks } = storedState
   return Array.isArray(wishedBooks) ? wishedBooks.filter(isBook) : []
 }
 
@@ -50,9 +54,7 @@ export const useWishlistStore = create<WishlistState>()(
       actions: {
         toggleWishedBook: (book) =>
           set((state) => {
-            const isAlreadyWished = state.wishedBooks.some(
-              (wishedBook) => wishedBook.id === book.id,
-            )
+            const isAlreadyWished = containsBook(state.wishedBooks, book.id)
             return {
               wishedBooks: isAlreadyWished
                 ? state.wishedBooks.filter((wishedBook) => wishedBook.id !== book.id)
@@ -75,5 +77,5 @@ export const useWishlistStore = create<WishlistState>()(
 
 export const useWishedBooks = () => useWishlistStore((state) => state.wishedBooks)
 export const useIsWishedBook = (bookId: string) =>
-  useWishlistStore((state) => state.wishedBooks.some((wishedBook) => wishedBook.id === bookId))
+  useWishlistStore((state) => containsBook(state.wishedBooks, bookId))
 export const useWishlistActions = () => useWishlistStore((state) => state.actions)
