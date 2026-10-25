@@ -117,6 +117,27 @@ describe('상세 검색', () => {
     expect(screen.getByRole('dialog', { name: '상세 검색' })).toBeInTheDocument()
   })
 
+  test('검색 조건을 마우스로 고른 뒤에도 Esc로 팝업을 닫을 수 있다', async () => {
+    const { user } = renderApp('/')
+    const dialog = await openDetailSearch(user)
+    await user.click(within(dialog).getByRole('combobox', { name: '검색 조건' }))
+    await user.click(screen.getByRole('option', { name: '저자명' }))
+
+    await user.keyboard('{Escape}')
+
+    expect(screen.queryByRole('dialog', { name: '상세 검색' })).not.toBeInTheDocument()
+  })
+
+  test('검색 조건 목록을 연 채로 다른 곳으로 포커스를 옮기면 목록을 닫는다', async () => {
+    const { user } = renderApp('/')
+    const dialog = await openDetailSearch(user)
+    await user.click(within(dialog).getByRole('combobox', { name: '검색 조건' }))
+
+    await user.tab()
+
+    expect(screen.queryByRole('listbox', { name: '검색 조건' })).not.toBeInTheDocument()
+  })
+
   test('검색 조건에서 ↑를 누르면 목록의 마지막 조건부터 고른다', async () => {
     const { user } = renderApp('/')
     const dialog = await openDetailSearch(user)

@@ -72,6 +72,7 @@ export function Select<Value extends string>({
         aria-activedescendant={highlightedOption ? toOptionId(highlightedOption.value) : undefined}
         onClick={() => (isOpen ? close() : setIsOpen(true))}
         onKeyDown={handleTriggerKeyDown}
+        onBlur={close}
         className="flex h-9 w-full cursor-pointer items-center justify-between border-b border-divider px-2 text-body2 leading-5 font-bold text-fg-primary"
       >
         {selectedOption?.label}
@@ -82,6 +83,7 @@ export function Select<Value extends string>({
           id={listboxId}
           role="listbox"
           aria-label={label}
+          onMouseDown={(event) => event.preventDefault()}
           className="absolute top-full left-0 z-10 mt-1.5 w-full bg-white shadow-dropdown"
         >
           {selectableOptions.map((option) => (
