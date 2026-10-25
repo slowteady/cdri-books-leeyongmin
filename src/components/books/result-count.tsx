@@ -9,14 +9,20 @@ export function ResultCount({ label, count }: ResultCountProps) {
   return (
     <p role="status" className="flex gap-4 text-caption leading-6 text-fg-primary">
       <span>{label}</span>
-      {count === null ? (
-        <CountSkeleton />
-      ) : (
-        <span>
-          총 <span className="text-primary">{count.toLocaleString('ko-KR')}</span>건
-        </span>
-      )}
+      {count === null ? <CountSkeleton /> : <CountText count={count} />}
     </p>
+  )
+}
+
+type CountTextProps = {
+  count: number
+}
+
+function CountText({ count }: CountTextProps) {
+  return (
+    <span>
+      총 <span className="text-primary">{count.toLocaleString('ko-KR')}</span>건
+    </span>
   )
 }
 

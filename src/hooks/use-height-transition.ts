@@ -7,6 +7,10 @@ function prefersReducedMotion() {
   return window.matchMedia?.(REDUCED_MOTION_QUERY).matches ?? false
 }
 
+function forceReflow(element: HTMLElement) {
+  element.getBoundingClientRect()
+}
+
 function releaseHeight(element: HTMLElement) {
   element.style.removeProperty('height')
   element.style.removeProperty('transition')
@@ -43,7 +47,7 @@ export function useHeightTransition<AnimatedElement extends HTMLElement>(trigger
     isAnimatingRef.current = true
     element.style.overflow = 'hidden'
     element.style.height = `${startHeight}px`
-    element.getBoundingClientRect()
+    forceReflow(element)
     element.style.transition = HEIGHT_TRANSITION
     element.style.height = `${endHeight}px`
 

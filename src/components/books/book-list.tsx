@@ -12,8 +12,8 @@ type BookListProps = {
   books: Book[]
   renderWishlistButton: (book: Book) => ReactNode
   hasMore: boolean
-  isLoadingMore: boolean
-  hasLoadMoreFailed: boolean
+  isLoadingMore?: boolean
+  hasLoadMoreFailed?: boolean
   onLoadMore: () => void
 }
 
@@ -21,12 +21,13 @@ export function BookList({
   books,
   renderWishlistButton,
   hasMore,
-  isLoadingMore,
-  hasLoadMoreFailed,
+  isLoadingMore = false,
+  hasLoadMoreFailed = false,
   onLoadMore,
 }: BookListProps) {
   const [expandedBookId, setExpandedBookId] = useState<string | null>(null)
   const loadMoreTriggerRef = useIntersectionObserver<HTMLButtonElement>(onLoadMore)
+  const showsLoadMoreButton = hasMore && !isLoadingMore && !hasLoadMoreFailed
 
   const toggleExpandedBook = (bookId: string) => {
     setExpandedBookId((currentBookId) => (currentBookId === bookId ? null : bookId))
@@ -55,7 +56,7 @@ export function BookList({
           </Button>
         </div>
       )}
-      {hasMore && !isLoadingMore && !hasLoadMoreFailed && (
+      {showsLoadMoreButton && (
         <div className="flex justify-center py-8">
           <Button ref={loadMoreTriggerRef} variant="secondary" onClick={onLoadMore}>
             더 보기

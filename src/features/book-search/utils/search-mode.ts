@@ -22,8 +22,8 @@ export function isSearchTarget(value: unknown): value is SearchTarget {
   return SEARCH_TARGETS.some((searchTarget) => searchTarget === value)
 }
 
-export const SEARCH_QUERY_PARAM = 'q'
-export const SEARCH_TARGET_PARAM = 'target'
+const SEARCH_QUERY_PARAM = 'q'
+const SEARCH_TARGET_PARAM = 'target'
 
 export function parseSearchMode(searchParams: URLSearchParams): SearchMode {
   const query = searchParams.get(SEARCH_QUERY_PARAM)?.trim()

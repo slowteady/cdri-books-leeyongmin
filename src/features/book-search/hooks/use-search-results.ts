@@ -22,7 +22,7 @@ export type SearchResultsView =
 
 export function useSearchResults(searchMode: SearchMode): SearchResultsView {
   const {
-    data,
+    data: bookSearchResult,
     isLoading,
     error,
     isError,
@@ -34,16 +34,16 @@ export function useSearchResults(searchMode: SearchMode): SearchResultsView {
   } = useInfiniteQuery({ ...bookQueries.search(searchMode), select: selectBookSearchResult })
 
   if (isLoading) return { status: 'loading' }
-  if (isError && !data) {
+  if (isError && !bookSearchResult) {
     return { status: 'error', ...describeSearchError(error), retry: () => void refetch() }
   }
-  if (!data) return { status: 'idle' }
-  if (data.books.length === 0) return { status: 'empty' }
+  if (!bookSearchResult) return { status: 'idle' }
+  if (bookSearchResult.books.length === 0) return { status: 'empty' }
 
   return {
     status: 'success',
-    books: data.books,
-    totalCount: data.totalCount,
+    books: bookSearchResult.books,
+    totalCount: bookSearchResult.totalCount,
     hasMore: hasNextPage,
     isLoadingMore: isFetchingNextPage,
     hasLoadMoreFailed: isFetchNextPageError,

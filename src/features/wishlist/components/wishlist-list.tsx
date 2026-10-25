@@ -25,9 +25,8 @@ export function WishlistList() {
     >
       <ResultCount label="찜한 책" count={totalCount} />
       <div className="mt-9">
-        {totalCount === 0 ? (
-          <EmptyState message="찜한 책이 없습니다." />
-        ) : (
+        {totalCount === 0 && <EmptyState message="찜한 책이 없습니다." />}
+        {totalCount > 0 && (
           <BookList
             books={books}
             renderWishlistButton={(book) => (
@@ -38,8 +37,6 @@ export function WishlistList() {
               />
             )}
             hasMore={hasMore}
-            isLoadingMore={false}
-            hasLoadMoreFailed={false}
             onLoadMore={loadMore}
           />
         )}

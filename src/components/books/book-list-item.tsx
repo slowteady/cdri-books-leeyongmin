@@ -10,6 +10,9 @@ import { formatPrice, getDisplayPrice, toLargeThumbnailUrl } from './book-format
 
 const ITEM_MOBILE_LAYOUT = 'group flex flex-wrap items-start gap-4 border-b border-divider py-4'
 const ITEM_DESKTOP_LAYOUT = 'lg:flex-nowrap lg:items-center lg:gap-0 lg:pr-4 lg:pb-3.75 lg:pl-12'
+const THUMBNAIL_FRAME = 'relative h-17 w-12 shrink-0 bg-light-gray'
+const THUMBNAIL_EXPANDED_SIZE =
+  'group-data-expanded:h-34 group-data-expanded:w-24 lg:group-data-expanded:h-70 lg:group-data-expanded:w-52.5'
 const ACTIONS_MOBILE_LAYOUT = 'flex basis-full flex-wrap items-center gap-2'
 const ACTIONS_DESKTOP_LAYOUT =
   'lg:ml-6 lg:basis-auto lg:flex-nowrap lg:gap-0 lg:group-data-expanded:flex-col lg:group-data-expanded:items-end'
@@ -81,8 +84,8 @@ function BookThumbnail({ book, isExpanded, wishlistButton }: BookThumbnailProps)
   }
 
   return (
-    <div className="relative h-17 w-12 shrink-0 bg-light-gray group-data-expanded:h-34 group-data-expanded:w-24 lg:group-data-expanded:h-70 lg:group-data-expanded:w-52.5">
-      {thumbnailUrl ? (
+    <div className={cn(THUMBNAIL_FRAME, THUMBNAIL_EXPANDED_SIZE)}>
+      {thumbnailUrl && (
         <img
           src={thumbnailUrl}
           alt=""
@@ -93,8 +96,6 @@ function BookThumbnail({ book, isExpanded, wishlistButton }: BookThumbnailProps)
           onError={handleThumbnailError}
           className="size-full object-cover"
         />
-      ) : (
-        <div className="size-full bg-light-gray" />
       )}
       <div className="absolute -top-1 -right-1 group-data-expanded:top-0 group-data-expanded:right-0 lg:group-data-expanded:top-2 lg:group-data-expanded:right-2">
         {wishlistButton}
