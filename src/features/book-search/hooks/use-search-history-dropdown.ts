@@ -3,6 +3,7 @@ import { useState } from 'react'
 import {
   useSearchHistoryActions,
   useSearchHistoryEntries,
+  type SearchHistoryEntry,
 } from '@/features/book-search/stores/search-history-store'
 import { useListboxNavigation, type HighlightDirection } from '@/hooks/use-listbox-navigation'
 
@@ -24,10 +25,13 @@ export function useSearchHistoryDropdown() {
     listboxNavigation.moveHighlight(direction)
   }
 
-  const removeHighlightedEntry = () => {
-    if (!highlightedEntry) return
-    removeHistoryEntry(highlightedEntry)
+  const removeEntry = (entry: SearchHistoryEntry) => {
+    removeHistoryEntry(entry)
     listboxNavigation.resetHighlight()
+  }
+
+  const removeHighlightedEntry = () => {
+    if (highlightedEntry) removeEntry(highlightedEntry)
   }
 
   return {
@@ -38,7 +42,7 @@ export function useSearchHistoryDropdown() {
     open: () => setIsOpen(true),
     close,
     moveHighlight,
-    removeEntry: removeHistoryEntry,
+    removeEntry,
     removeHighlightedEntry,
   }
 }

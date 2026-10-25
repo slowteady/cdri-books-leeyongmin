@@ -191,6 +191,24 @@ describe('검색창', () => {
     ])
   })
 
+  test('방향키로 기록을 고른 뒤 다른 기록을 X로 지우면 고른 상태를 풀어 엉뚱한 기록으로 검색하지 않는다', async () => {
+    useSearchHistoryStore.setState({
+      historyEntries: [
+        { query: '바다', searchTarget: null },
+        { query: '숲', searchTarget: null },
+        { query: '하늘', searchTarget: null },
+      ],
+    })
+    const { router, user } = renderApp('/')
+    await user.click(await screen.findByRole('combobox', { name: '검색어' }))
+    await user.keyboard('{ArrowDown}{ArrowDown}')
+
+    await user.click(screen.getByRole('button', { name: '바다 검색 기록 삭제' }))
+    await user.keyboard('{Enter}')
+
+    expect(router.state.location.search).toBe('')
+  })
+
   test('기록을 고르지 않았을 때 Delete 키는 입력한 글자를 지운다', async () => {
     useSearchHistoryStore.setState({ historyEntries: [{ query: '바다', searchTarget: null }] })
     const { user } = renderApp('/')

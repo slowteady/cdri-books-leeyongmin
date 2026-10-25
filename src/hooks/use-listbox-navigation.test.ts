@@ -20,4 +20,12 @@ describe('useListboxNavigation', () => {
 
     expect(result.current.highlightedItem).toBe('바다')
   })
+
+  test('항목이 없으면 방향키를 눌러도 아무것도 고르지 않는다', () => {
+    const { result } = renderHook(() => useListboxNavigation<string>([]))
+
+    act(() => result.current.moveHighlight('previous'))
+
+    expect(result.current.highlightedIndex).toBeNull()
+  })
 })

@@ -17,6 +17,7 @@ export function useListboxNavigation<Item>(items: Item[]) {
   const highlightedItem = highlightedIndex === null ? null : (items[highlightedIndex] ?? null)
 
   const moveHighlight = (direction: HighlightDirection) => {
+    if (items.length === 0) return
     setHighlightedIndex((currentIndex) =>
       getNextHighlightIndex(currentIndex, direction, items.length),
     )
