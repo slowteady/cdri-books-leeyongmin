@@ -1,9 +1,4 @@
-import {
-  formatPrice,
-  getDisplayPrice,
-  getThumbnailUrlCandidates,
-  toLargeThumbnailUrl,
-} from './book-format'
+import { formatPrice, getDisplayPrice, getThumbnailUrlCandidates } from './book-format'
 
 describe('getDisplayPrice', () => {
   test('할인가가 있으면 할인가, 없으면 원가를 목록 가격으로 쓴다', () => {
@@ -19,35 +14,32 @@ describe('formatPrice', () => {
   })
 })
 
-describe('toLargeThumbnailUrl', () => {
-  test('Kakao 썸네일 크기 지정을 R400x0으로 바꾼다', () => {
-    expect(toLargeThumbnailUrl('https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=1')).toBe(
-      'https://search1.kakaocdn.net/thumb/R400x0/?fname=1',
-    )
-  })
-
-  test('Kakao 썸네일 형식이 아니면 그대로 둔다', () => {
-    expect(toLargeThumbnailUrl('https://example.com/cover.jpg')).toBe(
-      'https://example.com/cover.jpg',
-    )
-  })
-})
-
 describe('getThumbnailUrlCandidates', () => {
-  const thumbnailUrl = 'https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=cover'
+  const thumbnailUrl = 'https://example.com/cover.jpg'
+  const largeThumbnailUrl = 'https://example.com/cover-large.jpg'
 
   test('펼치면 큰 표지를 먼저 쓰고, 실패하면 원래 표지를 쓴다', () => {
-    expect(getThumbnailUrlCandidates(thumbnailUrl, true)).toEqual([
-      toLargeThumbnailUrl(thumbnailUrl),
+    expect(getThumbnailUrlCandidates({ thumbnailUrl, largeThumbnailUrl }, true)).toEqual([
+      largeThumbnailUrl,
+      thumbnailUrl,
+    ])
+  })
+
+  test('큰 표지 주소가 없으면 펼쳐도 원래 표지만 쓴다', () => {
+    expect(getThumbnailUrlCandidates({ thumbnailUrl, largeThumbnailUrl: null }, true)).toEqual([
       thumbnailUrl,
     ])
   })
 
   test('접혀 있으면 원래 표지만 쓴다', () => {
-    expect(getThumbnailUrlCandidates(thumbnailUrl, false)).toEqual([thumbnailUrl])
+    expect(getThumbnailUrlCandidates({ thumbnailUrl, largeThumbnailUrl }, false)).toEqual([
+      thumbnailUrl,
+    ])
   })
 
   test('표지가 없으면 쓸 주소가 없다', () => {
-    expect(getThumbnailUrlCandidates(null, true)).toEqual([])
+    expect(
+      getThumbnailUrlCandidates({ thumbnailUrl: null, largeThumbnailUrl: null }, true),
+    ).toEqual([])
   })
 })

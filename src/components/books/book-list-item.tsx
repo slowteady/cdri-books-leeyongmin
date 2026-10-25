@@ -8,12 +8,7 @@ import type { Book } from '@/types/book'
 import { cn } from '@/utils/cn'
 import { preloadImage } from '@/utils/preload-image'
 
-import {
-  formatPrice,
-  getDisplayPrice,
-  getThumbnailUrlCandidates,
-  toLargeThumbnailUrl,
-} from './book-format'
+import { formatPrice, getDisplayPrice, getThumbnailUrlCandidates } from './book-format'
 import {
   BOOK_ROW_BASE,
   BOOK_THUMBNAIL_HEIGHT_PX,
@@ -92,7 +87,7 @@ function BookThumbnail({ book, isExpanded, wishlistButton }: BookThumbnailProps)
     shouldAnimateGrowthOnly: true,
   })
   const [failedThumbnailUrls, setFailedThumbnailUrls] = useState<string[]>([])
-  const thumbnailUrlCandidates = getThumbnailUrlCandidates(book.thumbnailUrl, isExpanded)
+  const thumbnailUrlCandidates = getThumbnailUrlCandidates(book, isExpanded)
   const thumbnailUrl = thumbnailUrlCandidates.find((url) => !failedThumbnailUrls.includes(url))
 
   const handleThumbnailError = () => {
@@ -183,7 +178,7 @@ function BookActions({ book, isExpanded, descriptionId, onToggleExpanded }: Book
   const hasSalePrice = book.salePrice !== null
 
   const preloadExpandedThumbnail = () => {
-    if (book.thumbnailUrl && !isExpanded) preloadImage(toLargeThumbnailUrl(book.thumbnailUrl))
+    if (book.largeThumbnailUrl && !isExpanded) preloadImage(book.largeThumbnailUrl)
   }
 
   return (

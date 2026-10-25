@@ -5,10 +5,9 @@ import { createBook } from '@/testing/data/books'
 import { mockAnimate } from '@/testing/mock-animate'
 import type { Book } from '@/types/book'
 
-import { toLargeThumbnailUrl } from './book-format'
 import { BookListItem } from './book-list-item'
 
-const LARGE_THUMBNAIL_URL = toLargeThumbnailUrl(createBook().thumbnailUrl ?? '')
+const LARGE_THUMBNAIL_URL = createBook().largeThumbnailUrl
 
 function renderBookListItem({ book = createBook(), isExpanded = false } = {}) {
   const handleToggleExpanded = vi.fn()

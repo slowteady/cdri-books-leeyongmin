@@ -49,6 +49,24 @@ describe('toBook', () => {
     expect(toBook(createKakaoBookDocument({ thumbnail: '' })).thumbnailUrl).toBeNull()
   })
 
+  test('펼친 행에 쓸 큰 표지 주소는 Kakao 썸네일 크기 지정을 R400x0으로 바꿔 만든다', () => {
+    const book = toBook(
+      createKakaoBookDocument({
+        thumbnail: 'https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=540378',
+      }),
+    )
+
+    expect(book.largeThumbnailUrl).toBe('https://search1.kakaocdn.net/thumb/R400x0/?fname=540378')
+  })
+
+  test('썸네일이 없거나 Kakao 썸네일 형식이 아니면 큰 표지 주소가 없다', () => {
+    expect(toBook(createKakaoBookDocument({ thumbnail: '' })).largeThumbnailUrl).toBeNull()
+    expect(
+      toBook(createKakaoBookDocument({ thumbnail: 'https://example.com/cover.jpg' }))
+        .largeThumbnailUrl,
+    ).toBeNull()
+  })
+
   test('책 소개를 옮긴다', () => {
     expect(toBook(createKakaoBookDocument({ contents: '첫 문장입니다.' })).description).toBe(
       '첫 문장입니다.',

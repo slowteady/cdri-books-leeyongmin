@@ -64,6 +64,17 @@ function toDescription(contents: string) {
   return SENTENCE_ENDING_PATTERN.test(description) ? description : description + TRUNCATION_MARK
 }
 
+const KAKAO_THUMBNAIL_SIZE_SEGMENT_PATTERN = /\/thumb\/R\d+x\d+(?:\.q\d+)?\//
+const KAKAO_LARGE_THUMBNAIL_SIZE_SEGMENT = '/thumb/R400x0/'
+
+function toLargeThumbnailUrl(thumbnailUrl: string) {
+  if (!KAKAO_THUMBNAIL_SIZE_SEGMENT_PATTERN.test(thumbnailUrl)) return null
+  return thumbnailUrl.replace(
+    KAKAO_THUMBNAIL_SIZE_SEGMENT_PATTERN,
+    KAKAO_LARGE_THUMBNAIL_SIZE_SEGMENT,
+  )
+}
+
 function toAuthors(authors: string[]) {
   return authors.map((author) => author.trim()).filter(Boolean)
 }
@@ -86,6 +97,7 @@ export function toBook(kakaoBook: KakaoBookDocument): Book {
     description: toDescription(kakaoBook.contents),
     detailUrl: kakaoBook.url,
     thumbnailUrl: kakaoBook.thumbnail || null,
+    largeThumbnailUrl: toLargeThumbnailUrl(kakaoBook.thumbnail),
     originalPrice: toOriginalPrice(kakaoBook.price),
     salePrice: toSalePrice(kakaoBook.price, kakaoBook.sale_price),
   }

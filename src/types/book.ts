@@ -6,6 +6,7 @@ export type Book = {
   description: string | null
   detailUrl: string
   thumbnailUrl: string | null
+  largeThumbnailUrl: string | null
   originalPrice: number | null
   salePrice: number | null
 }

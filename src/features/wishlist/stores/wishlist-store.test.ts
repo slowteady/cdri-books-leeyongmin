@@ -32,7 +32,7 @@ describe('useWishlistStore', () => {
     useWishlistStore.getState().actions.toggleWishedBook(book)
 
     const storedValue = JSON.parse(localStorage.getItem(WISHLIST_STORAGE_KEY) ?? 'null')
-    expect(storedValue).toEqual({ state: { wishedBooks: [book] }, version: 1 })
+    expect(storedValue).toEqual({ state: { wishedBooks: [book] }, version: 2 })
   })
 
   test('저장값이 깨져 있으면 형식이 올바른 책만 복원하고, 복원 후에도 찜할 수 있다', async () => {
@@ -40,7 +40,7 @@ describe('useWishlistStore', () => {
       WISHLIST_STORAGE_KEY,
       JSON.stringify({
         state: { wishedBooks: [createBook({ id: 'a' }), { id: 1 }, null, 'broken'] },
-        version: 1,
+        version: 2,
       }),
     )
 
@@ -61,14 +61,29 @@ describe('useWishlistStore', () => {
             { ...createBook({ id: 'string-price' }), originalPrice: '16000' },
             { ...createBook({ id: 'author-not-array' }), authors: '한강' },
             { ...createBook({ id: 'missing-detail-url' }), detailUrl: undefined },
+            { ...createBook({ id: 'missing-large-thumbnail' }), largeThumbnailUrl: undefined },
           ],
         },
-        version: 1,
+        version: 2,
       }),
     )
 
     await useWishlistStore.persist.rehydrate()
 
     expect(getWishedBookIds()).toEqual(['valid'])
+  })
+
+  test('큰 표지 주소가 생기기 전(버전 1)에 저장한 찜은 큰 표지 주소 없이 복원한다', async () => {
+    const { largeThumbnailUrl: _, ...bookSavedInVersion1 } = createBook({ id: 'saved-in-v1' })
+    localStorage.setItem(
+      WISHLIST_STORAGE_KEY,
+      JSON.stringify({ state: { wishedBooks: [bookSavedInVersion1] }, version: 1 }),
+    )
+
+    await useWishlistStore.persist.rehydrate()
+
+    expect(useWishlistStore.getState().wishedBooks).toEqual([
+      { ...bookSavedInVersion1, largeThumbnailUrl: null },
+    ])
   })
 })

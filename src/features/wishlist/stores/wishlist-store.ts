@@ -5,6 +5,8 @@ import type { Book } from '@/types/book'
 import { isRecord } from '@/utils/is-record'
 
 export const WISHLIST_STORAGE_KEY = 'cdri-books:wishlist'
+const WISHLIST_STORAGE_VERSION = 2
+const VERSION_BEFORE_LARGE_THUMBNAIL = 1
 
 function isStringOrNull(value: unknown) {
   return value === null || typeof value === 'string'
@@ -25,6 +27,7 @@ function isBook(value: unknown): value is Book {
     isStringOrNull(value.description) &&
     typeof value.detailUrl === 'string' &&
     isStringOrNull(value.thumbnailUrl) &&
+    isStringOrNull(value.largeThumbnailUrl) &&
     isNumberOrNull(value.originalPrice) &&
     isNumberOrNull(value.salePrice)
   )
@@ -38,6 +41,24 @@ function readStoredWishedBooks(storedState: unknown) {
   if (!isRecord(storedState)) return []
   const { wishedBooks } = storedState
   return Array.isArray(wishedBooks) ? wishedBooks.filter(isBook) : []
+}
+
+function addMissingLargeThumbnailUrl(storedState: unknown) {
+  if (!isRecord(storedState) || !Array.isArray(storedState.wishedBooks)) return storedState
+  return {
+    ...storedState,
+    wishedBooks: storedState.wishedBooks.map((storedBook) =>
+      isRecord(storedBook) ? { largeThumbnailUrl: null, ...storedBook } : storedBook,
+    ),
+  }
+}
+
+function migrateStoredWishlist(storedState: unknown, storedVersion: number) {
+  const migratedState =
+    storedVersion === VERSION_BEFORE_LARGE_THUMBNAIL
+      ? addMissingLargeThumbnailUrl(storedState)
+      : storedState
+  return { wishedBooks: readStoredWishedBooks(migratedState) }
 }
 
 type WishlistState = {
@@ -65,7 +86,8 @@ export const useWishlistStore = create<WishlistState>()(
     }),
     {
       name: WISHLIST_STORAGE_KEY,
-      version: 1,
+      version: WISHLIST_STORAGE_VERSION,
+      migrate: migrateStoredWishlist,
       partialize: (state) => ({ wishedBooks: state.wishedBooks }),
       merge: (storedState, currentState) => ({
         ...currentState,
