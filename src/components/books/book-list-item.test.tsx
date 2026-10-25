@@ -32,6 +32,13 @@ describe('BookListItem', () => {
     expect(screen.getAllByText('13,500원').length).toBeGreaterThan(0)
   })
 
+  test('책 제목은 페이지 제목 바로 아래 단계이고, 책 소개는 그 아래 단계다', () => {
+    renderExpanded({})
+
+    expect(screen.getByRole('heading', { level: 2, name: '노르웨이의 숲' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { level: 3, name: '책 소개' })).toBeInTheDocument()
+  })
+
   test('구매하기를 누르면 새 탭으로 해당 책의 상세페이지로 이동한다', () => {
     renderBookListItem()
 

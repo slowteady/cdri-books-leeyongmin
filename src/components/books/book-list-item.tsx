@@ -106,12 +106,12 @@ function BookSummary({ book, isExpanded, titleId, descriptionId }: BookSummaryPr
   return (
     <div className="min-w-0 flex-1 lg:ml-12 lg:group-data-expanded:ml-8 lg:group-data-expanded:pt-5">
       <div className="flex min-w-0 flex-col items-start gap-1 lg:flex-row lg:items-center lg:gap-4">
-        <h3
+        <h2
           id={titleId}
           className="text-title3 leading-6.5 text-fg-primary lg:truncate lg:leading-4.5 lg:group-data-expanded:leading-6.5 lg:group-data-expanded:whitespace-normal"
         >
           {book.title}
-        </h3>
+        </h2>
         {book.authors.length > 0 && (
           <p className="text-body2 text-fg-secondary group-data-expanded:leading-5.5 group-data-expanded:text-fg-subtitle lg:shrink-0">
             {book.authors.join(', ')}
@@ -124,7 +124,7 @@ function BookSummary({ book, isExpanded, titleId, descriptionId }: BookSummaryPr
         aria-label="책 소개"
         className="mt-4 lg:max-w-90"
       >
-        <h4 className="text-body2 leading-6.5 font-bold text-fg-primary">책 소개</h4>
+        <h3 className="text-body2 leading-6.5 font-bold text-fg-primary">책 소개</h3>
         <p className="mt-3 text-small leading-4 whitespace-pre-line text-fg-primary">
           {book.description ?? '책 소개가 없습니다.'}
         </p>
