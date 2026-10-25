@@ -49,6 +49,10 @@
   --shadow-dropdown: 0 0 4px rgb(0 0 0 / 0.25);
 }
 
+@utility w-popover {
+  width: min(22.5rem, calc(100vw - 2rem));
+}
+
 @layer base {
   body {
     background-color: var(--color-white);

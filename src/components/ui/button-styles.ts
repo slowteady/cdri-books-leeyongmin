@@ -12,7 +12,7 @@ const VARIANT_CLASS_NAMES = {
 const SIZE_CLASS_NAMES = {
   lg: 'h-12 gap-1.25 px-5 text-caption',
   md: 'h-9 gap-2.5 px-2.5 text-body2 leading-5.5',
-  sm: 'h-8.75 gap-2.5 px-2.5 text-body2',
+  sm: 'h-8.75 gap-2.5 px-2.25 text-body2',
 } as const
 
 export type ButtonVariant = keyof typeof VARIANT_CLASS_NAMES
