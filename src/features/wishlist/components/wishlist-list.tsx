@@ -3,26 +3,24 @@ import type { RenderWishlistButton } from '@/components/books/book-list-item'
 import { ResultCount } from '@/components/books/result-count'
 import { EmptyState } from '@/components/ui/empty-state'
 import { useWishlistList } from '@/features/wishlist/hooks/use-wishlist-list'
+import { useFocusRegistry } from '@/hooks/use-focus-registry'
 import type { Book } from '@/types/book'
 
 import { WishlistButton } from './wishlist-button'
 
 export function WishlistList() {
+  const { books, totalCount, hasMore, loadMore, findNextFocusBookId } = useWishlistList()
   const {
-    books,
-    totalCount,
-    hasMore,
-    loadMore,
-    registerWishlistSection,
-    registerWishlistButton,
-    moveFocusAfterRemoval,
-  } = useWishlistList()
+    registerElement: registerWishlistButton,
+    registerFallbackElement: registerWishlistSection,
+    focusOnNextFrame,
+  } = useFocusRegistry<string>()
 
   const renderWishlistButton: RenderWishlistButton = (book) => (
     <WishlistButton
       book={book}
       ref={registerWishlistButton(book.id)}
-      onUnwish={() => moveFocusAfterRemoval(book.id)}
+      onUnwish={() => focusOnNextFrame(findNextFocusBookId(book.id))}
     />
   )
 
