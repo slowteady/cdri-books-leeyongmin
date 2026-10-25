@@ -29,7 +29,9 @@ function Header() {
 
   return (
     <header className={cn(HEADER_MOBILE_LAYOUT, HEADER_DESKTOP_LAYOUT)}>
-      <p className="text-title1 text-fg-primary sm:mb-2">CERTICOS BOOKS</p>
+      <p className="text-title1 whitespace-nowrap text-fg-primary sm:mb-2 lg:w-51.75">
+        CERTICOS BOOKS
+      </p>
       <nav aria-label="주요 메뉴" className="flex gap-6 sm:mt-1 sm:ml-10 lg:ml-100 lg:gap-14">
         <NavLink to={searchTabPath} className={NAVIGATION_TAB_CLASS_NAME}>
           도서 검색
