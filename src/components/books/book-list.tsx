@@ -75,11 +75,11 @@ export function BookListSkeleton({ label, rowCount }: BookListSkeletonProps) {
       {Array.from({ length: rowCount }, (_, rowIndex) => (
         <div
           key={rowIndex}
-          className="flex h-25 animate-pulse items-center gap-12 border-b border-divider pr-4 pl-12"
+          className="flex flex-wrap items-center gap-4 border-b border-divider py-4 motion-safe:animate-pulse lg:h-25 lg:flex-nowrap lg:gap-12 lg:py-0 lg:pr-4 lg:pl-12"
         >
-          <div className="h-17 w-12 bg-light-gray" />
-          <div className="h-4.5 flex-1 rounded-lg bg-light-gray" />
-          <div className="h-12 w-60 rounded-lg bg-light-gray" />
+          <div className="h-17 w-12 shrink-0 bg-light-gray" />
+          <div className="h-4.5 min-w-0 flex-1 rounded-lg bg-light-gray" />
+          <div className="h-12 basis-full rounded-lg bg-light-gray lg:w-60 lg:basis-auto" />
         </div>
       ))}
     </div>

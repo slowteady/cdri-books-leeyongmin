@@ -72,7 +72,7 @@ function BookThumbnail({ book, isExpanded, wishlistButton }: BookThumbnailProps)
   }
 
   return (
-    <div className="relative h-17 w-12 shrink-0 group-data-expanded:h-34 group-data-expanded:w-24 lg:group-data-expanded:h-70 lg:group-data-expanded:w-52.5">
+    <div className="relative h-17 w-12 shrink-0 bg-light-gray group-data-expanded:h-34 group-data-expanded:w-24 lg:group-data-expanded:h-70 lg:group-data-expanded:w-52.5">
       {thumbnailUrl ? (
         <img
           src={thumbnailUrl}
