@@ -1,4 +1,4 @@
-import { NavLink, Outlet } from 'react-router'
+import { NavLink, Outlet, ScrollRestoration } from 'react-router'
 
 export function RootLayout() {
   return (
@@ -7,6 +7,7 @@ export function RootLayout() {
       <main className="mx-auto box-content max-w-content px-4 pt-10 pb-20 lg:pt-20">
         <Outlet />
       </main>
+      <ScrollRestoration />
     </>
   )
 }

@@ -19,6 +19,18 @@ describe('페이지 이동', () => {
     ).toBeInTheDocument()
   })
 
+  test('다른 탭으로 이동하면 새 페이지를 맨 위부터 보여준다', async () => {
+    const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => {})
+    const { user } = renderApp('/')
+    await screen.findByRole('heading', { level: 1, name: '도서 검색' })
+    scrollTo.mockClear()
+
+    await user.click(screen.getByRole('link', { name: '내가 찜한 책' }))
+
+    await screen.findByRole('heading', { level: 1, name: '내가 찜한 책' })
+    expect(scrollTo).toHaveBeenCalledWith(0, 0)
+  })
+
   test('현재 페이지의 탭만 현재 탭으로 표시한다', async () => {
     renderApp('/wishlist')
 
