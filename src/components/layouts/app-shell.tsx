@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { NavLink } from 'react-router'
 
+import { useLastVisitedPath } from '@/hooks/use-last-visited-path'
 import { cn } from '@/utils/cn'
 
 const HEADER_MOBILE_LAYOUT = 'flex flex-col items-start gap-3 bg-white px-4 py-4'
@@ -24,11 +25,13 @@ export function AppShell({ children }: AppShellProps) {
 }
 
 function Header() {
+  const searchTabPath = useLastVisitedPath('/')
+
   return (
     <header className={cn(HEADER_MOBILE_LAYOUT, HEADER_DESKTOP_LAYOUT)}>
       <p className="text-title1 text-fg-primary">CERTICOS BOOKS</p>
       <nav aria-label="주요 메뉴" className="flex gap-6 sm:ml-10 lg:ml-100 lg:gap-14">
-        <NavLink to="/" className={NAVIGATION_TAB_CLASS_NAME}>
+        <NavLink to={searchTabPath} className={NAVIGATION_TAB_CLASS_NAME}>
           도서 검색
         </NavLink>
         <NavLink to="/wishlist" className={NAVIGATION_TAB_CLASS_NAME}>

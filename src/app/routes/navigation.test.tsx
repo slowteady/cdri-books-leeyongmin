@@ -1,5 +1,6 @@
 import { screen } from '@testing-library/react'
 
+import { mockBookSearchApi } from '@/testing/mock-book-search-api'
 import { renderApp } from '@/testing/test-utils'
 
 describe('페이지 이동', () => {
@@ -29,6 +30,36 @@ describe('페이지 이동', () => {
 
     await screen.findByRole('heading', { level: 1, name: '내가 찜한 책' })
     expect(scrollTo).toHaveBeenCalledWith(0, 0)
+  })
+
+  test('찜 탭에 갔다가 도서 검색 탭으로 돌아오면 보던 검색 결과를 그대로 보여준다', async () => {
+    mockBookSearchApi()
+    const { router, user } = renderApp('/?q=바다')
+    await screen.findByText('테스트 책 1')
+    await user.click(screen.getByRole('link', { name: '내가 찜한 책' }))
+    await screen.findByRole('heading', { level: 1, name: '내가 찜한 책' })
+
+    await user.click(screen.getByRole('link', { name: '도서 검색' }))
+
+    expect(await screen.findByText('테스트 책 1')).toBeInTheDocument()
+    expect(new URLSearchParams(router.state.location.search).get('q')).toBe('바다')
+    expect(screen.getByRole('combobox', { name: '검색어' })).toHaveValue('바다')
+  })
+
+  test('찜 탭에 갔다가 도서 검색 탭으로 돌아오면 보던 스크롤 위치로 돌아간다', async () => {
+    mockBookSearchApi()
+    const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => {})
+    const { user } = renderApp('/?q=바다')
+    await screen.findByText('테스트 책 1')
+    vi.spyOn(window, 'scrollY', 'get').mockReturnValue(640)
+    await user.click(screen.getByRole('link', { name: '내가 찜한 책' }))
+    await screen.findByRole('heading', { level: 1, name: '내가 찜한 책' })
+    scrollTo.mockClear()
+
+    await user.click(screen.getByRole('link', { name: '도서 검색' }))
+
+    await screen.findByText('테스트 책 1')
+    expect(scrollTo).toHaveBeenLastCalledWith(0, 640)
   })
 
   test('현재 페이지의 탭만 현재 탭으로 표시한다', async () => {
