@@ -4,7 +4,7 @@ export function RootLayout() {
   return (
     <>
       <Header />
-      <main className="mx-auto w-full max-w-content px-4 pt-20 pb-20">
+      <main className="mx-auto box-content max-w-content px-4 pt-20 pb-20">
         <Outlet />
       </main>
     </>
