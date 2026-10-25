@@ -15,6 +15,27 @@ function releaseHeight(element: HTMLElement) {
   element.style.removeProperty('overflow')
 }
 
+function playHeightTransition(
+  element: HTMLElement,
+  startHeight: number,
+  endHeight: number,
+  onFinish: () => void,
+) {
+  element.style.overflow = 'hidden'
+  element.style.height = `${startHeight}px`
+  forceReflow(element)
+  element.style.transition = HEIGHT_TRANSITION
+  element.style.height = `${endHeight}px`
+
+  const handleTransitionEnd = (event: TransitionEvent) => {
+    if (event.target !== element || event.propertyName !== 'height') return
+    releaseHeight(element)
+    onFinish()
+  }
+  element.addEventListener('transitionend', handleTransitionEnd)
+  return () => element.removeEventListener('transitionend', handleTransitionEnd)
+}
+
 export function useHeightTransition<AnimatedElement extends HTMLElement>(trigger: unknown) {
   const elementRef = useRef<AnimatedElement>(null)
   const settledHeightRef = useRef<number | null>(null)
@@ -43,19 +64,9 @@ export function useHeightTransition<AnimatedElement extends HTMLElement>(trigger
     if (startHeight === null || startHeight === endHeight || prefersReducedMotion()) return
 
     isAnimatingRef.current = true
-    element.style.overflow = 'hidden'
-    element.style.height = `${startHeight}px`
-    forceReflow(element)
-    element.style.transition = HEIGHT_TRANSITION
-    element.style.height = `${endHeight}px`
-
-    const handleTransitionEnd = (event: TransitionEvent) => {
-      if (event.target !== element || event.propertyName !== 'height') return
+    return playHeightTransition(element, startHeight, endHeight, () => {
       isAnimatingRef.current = false
-      releaseHeight(element)
-    }
-    element.addEventListener('transitionend', handleTransitionEnd)
-    return () => element.removeEventListener('transitionend', handleTransitionEnd)
+    })
   }, [trigger])
 
   return elementRef

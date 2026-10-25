@@ -1,9 +1,13 @@
 import { useEffect, type RefObject } from 'react'
 
+type OutsidePointerDownOptions = {
+  isEnabled: boolean
+}
+
 export function useOutsidePointerDown(
   containerRef: RefObject<HTMLElement | null>,
   onOutsidePointerDown: () => void,
-  isEnabled: boolean,
+  { isEnabled }: OutsidePointerDownOptions,
 ) {
   useEffect(() => {
     if (!isEnabled) return

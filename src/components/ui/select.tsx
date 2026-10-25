@@ -29,16 +29,24 @@ export function Select<Value extends string>({
   onChange,
 }: SelectProps<Value>) {
   const listboxId = useId()
-  const toOptionId = (optionValue: Value) => `${listboxId}-${optionValue}`
   const [isOpen, setIsOpen] = useState(false)
-  const selectedOption = options.find((option) => option.value === value)
   const selectableOptions = options.filter((option) => option.value !== value)
   const listboxNavigation = useListboxNavigation(selectableOptions)
+  const selectedOption = options.find((option) => option.value === value)
   const highlightedOption = isOpen ? listboxNavigation.highlightedOption : null
+  const toOptionId = (optionValue: Value) => `${listboxId}-${optionValue}`
+  const activeOptionId = highlightedOption ? toOptionId(highlightedOption.value) : undefined
+
+  const open = () => setIsOpen(true)
 
   const close = () => {
     setIsOpen(false)
     listboxNavigation.resetHighlight()
+  }
+
+  const toggle = () => {
+    if (isOpen) close()
+    else open()
   }
 
   const selectOption = (option: SelectOption<Value>) => {
@@ -49,10 +57,14 @@ export function Select<Value extends string>({
   const handleTriggerKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
     switch (event.key) {
       case 'ArrowDown':
+        event.preventDefault()
+        open()
+        listboxNavigation.moveHighlight('next')
+        break
       case 'ArrowUp':
         event.preventDefault()
-        setIsOpen(true)
-        listboxNavigation.moveHighlight(event.key === 'ArrowDown' ? 'next' : 'previous')
+        open()
+        listboxNavigation.moveHighlight('previous')
         break
       case 'Enter':
         if (!highlightedOption) break
@@ -75,8 +87,8 @@ export function Select<Value extends string>({
         aria-label={label}
         aria-expanded={isOpen}
         aria-controls={listboxId}
-        aria-activedescendant={highlightedOption ? toOptionId(highlightedOption.value) : undefined}
-        onClick={() => (isOpen ? close() : setIsOpen(true))}
+        aria-activedescendant={activeOptionId}
+        onClick={toggle}
         onKeyDown={handleTriggerKeyDown}
         onBlur={close}
         className={cn(TRIGGER_LAYOUT, TRIGGER_TEXT)}
