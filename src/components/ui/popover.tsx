@@ -38,13 +38,10 @@ export function Popover({
     if (!isOpen) return
     panelRef.current?.querySelector<HTMLElement>(FOCUSABLE_ELEMENT_SELECTOR)?.focus()
   }, [isOpen])
-
-  const close = () => onOpenChange(false)
-
-  useOutsidePointerDown(containerRef, close, { isEnabled: isOpen })
+  useOutsidePointerDown(containerRef, () => onOpenChange(false), { isEnabled: isOpen })
 
   const closeAndReturnFocus = () => {
-    close()
+    onOpenChange(false)
     triggerRef.current?.focus()
   }
 
