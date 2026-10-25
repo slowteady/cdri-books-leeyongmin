@@ -15,3 +15,22 @@ export function respondWithBookSearchPage(requestUrl: URL, totalCount = DEFAULT_
 export function mockBookSearchApi(totalCount = DEFAULT_TOTAL_COUNT) {
   return mockFetch((requestUrl) => respondWithBookSearchPage(requestUrl, totalCount))
 }
+
+export function respondPending() {
+  return new Promise<Response>(() => {})
+}
+
+export function mockPendingBookSearchApi() {
+  return mockFetch(respondPending)
+}
+
+export function mockBookSearchApiFailingOnce(
+  respondAfterFailure: (requestUrl: URL) => Response | Promise<Response>,
+) {
+  let hasFailed = false
+  return mockFetch((requestUrl) => {
+    if (hasFailed) return respondAfterFailure(requestUrl)
+    hasFailed = true
+    return new Response(null, { status: 503 })
+  })
+}

@@ -5,9 +5,14 @@ import { Button } from './button'
 
 describe('Button', () => {
   test('기본 type이 button이라 폼 안에서 눌러도 제출되지 않는다', async () => {
-    const handleSubmit = vi.fn((event: SubmitEvent) => event.preventDefault())
+    const handleSubmit = vi.fn()
     render(
-      <form onSubmit={(event) => handleSubmit(event.nativeEvent as SubmitEvent)}>
+      <form
+        onSubmit={(event) => {
+          event.preventDefault()
+          handleSubmit()
+        }}
+      >
         <Button>상세보기</Button>
       </form>,
     )

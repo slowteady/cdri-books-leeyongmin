@@ -1,17 +1,23 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 
+import { mockReducedMotion } from '@/testing/mock-reduced-motion'
+
 import { useHeightTransition } from './use-height-transition'
 
 const CLOSED_HEIGHT = 100
 const OPEN_HEIGHT = 344
 
 function Drawer({ isOpen }: { isOpen: boolean }) {
-  const drawerRef = useHeightTransition<HTMLDivElement>(isOpen)
+  const drawerRef = useHeightTransition<HTMLElement>(isOpen)
   return (
-    <div ref={drawerRef} data-testid="drawer">
+    <section ref={drawerRef} aria-label="서랍">
       {isOpen ? '열림' : '닫힘'}
-    </div>
+    </section>
   )
+}
+
+function getDrawer() {
+  return screen.getByRole('region', { name: '서랍' })
 }
 
 function mockNaturalHeights() {
@@ -22,54 +28,45 @@ function mockNaturalHeights() {
   })
 }
 
-function mockReducedMotion(isReduced: boolean) {
-  vi.stubGlobal('matchMedia', (query: string) => ({ matches: isReduced, media: query }))
-}
-
 describe('useHeightTransition', () => {
   test('열고 닫으면 이전 높이에서 새 높이로 부드럽게 옮겨 간다', () => {
     mockNaturalHeights()
-    mockReducedMotion(false)
     const { rerender } = render(<Drawer isOpen={false} />)
 
     rerender(<Drawer isOpen />)
 
-    const drawer = screen.getByTestId('drawer')
-    expect(drawer.style.height).toBe(`${OPEN_HEIGHT}px`)
-    expect(drawer.style.transition).toContain('height')
-    expect(drawer.style.overflow).toBe('hidden')
+    expect(getDrawer().style.height).toBe(`${OPEN_HEIGHT}px`)
+    expect(getDrawer().style.transition).toContain('height')
+    expect(getDrawer().style.overflow).toBe('hidden')
   })
 
   test('높이가 다 바뀌면 높이를 다시 내용에 맡긴다', () => {
     mockNaturalHeights()
-    mockReducedMotion(false)
     const { rerender } = render(<Drawer isOpen={false} />)
     rerender(<Drawer isOpen />)
-    const drawer = screen.getByTestId('drawer')
 
-    fireEvent.transitionEnd(drawer, { propertyName: 'height' })
+    fireEvent.transitionEnd(getDrawer(), { propertyName: 'height' })
 
-    expect(drawer.style.height).toBe('')
-    expect(drawer.style.transition).toBe('')
-    expect(drawer.style.overflow).toBe('')
+    expect(getDrawer().style.height).toBe('')
+    expect(getDrawer().style.transition).toBe('')
+    expect(getDrawer().style.overflow).toBe('')
   })
 
   test('동작 줄이기 설정이면 애니메이션 없이 바로 바꾼다', () => {
     mockNaturalHeights()
-    mockReducedMotion(true)
+    mockReducedMotion()
     const { rerender } = render(<Drawer isOpen={false} />)
 
     rerender(<Drawer isOpen />)
 
-    expect(screen.getByTestId('drawer').style.height).toBe('')
+    expect(getDrawer().style.height).toBe('')
   })
 
   test('처음 그릴 때는 애니메이션하지 않는다', () => {
     mockNaturalHeights()
-    mockReducedMotion(false)
 
     render(<Drawer isOpen />)
 
-    expect(screen.getByTestId('drawer').style.height).toBe('')
+    expect(getDrawer().style.height).toBe('')
   })
 })

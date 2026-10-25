@@ -3,6 +3,9 @@ import { act, screen } from '@testing-library/react'
 import {
   getRequestedPage,
   mockBookSearchApi,
+  mockBookSearchApiFailingOnce,
+  mockPendingBookSearchApi,
+  respondPending,
   respondWithBookSearchPage,
 } from '@/testing/mock-book-search-api'
 import { mockFetch } from '@/testing/mock-fetch'
@@ -50,7 +53,7 @@ describe('도서 검색 결과', () => {
   })
 
   test('검색하는 동안에는 불러오는 중임을 알리고 빈 결과 문구를 보여주지 않는다', async () => {
-    mockFetch(() => new Promise<Response>(() => {}))
+    mockPendingBookSearchApi()
 
     renderApp('/?q=테스트')
 
@@ -64,7 +67,8 @@ describe('도서 검색 결과', () => {
     await screen.findByText('테스트 책 1')
     await act(() => router.navigate('/?q=숲'))
     await screen.findByText('테스트 책 1')
-    await user.click(screen.getAllByRole('button', { name: '상세보기' })[0] as HTMLElement)
+    const [firstToggleButton] = screen.getAllByRole('button', { name: '상세보기' })
+    await user.click(firstToggleButton)
 
     await act(() => router.navigate(-1))
 
@@ -76,7 +80,7 @@ describe('도서 검색 결과', () => {
   })
 
   test('검색하는 동안에는 한 페이지 분량(10권)의 자리를 미리 그린다', async () => {
-    mockFetch(() => new Promise<Response>(() => {}))
+    mockPendingBookSearchApi()
 
     renderApp('/?q=테스트')
 
@@ -85,7 +89,7 @@ describe('도서 검색 결과', () => {
   })
 
   test('검색하는 동안에는 결과 건수를 0건으로 알리지 않는다', async () => {
-    mockFetch(() => new Promise<Response>(() => {}))
+    mockPendingBookSearchApi()
 
     renderApp('/?q=테스트')
 
@@ -94,12 +98,7 @@ describe('도서 검색 결과', () => {
   })
 
   test('다시 시도를 누르면 응답이 올 때까지 에러 안내 대신 불러오는 중임을 알린다', async () => {
-    let requestCount = 0
-    mockFetch(() => {
-      requestCount += 1
-      if (requestCount === 1) return new Response(null, { status: 503 })
-      return new Promise<Response>(() => {})
-    })
+    mockBookSearchApiFailingOnce(respondPending)
     const { user } = renderApp('/?q=테스트')
 
     await user.click(await screen.findByRole('button', { name: '다시 시도' }))
@@ -109,12 +108,7 @@ describe('도서 검색 결과', () => {
   })
 
   test('검색이 일시적으로 실패하면 안내와 다시 시도 버튼을 보여주고, 다시 시도하면 결과를 보여준다', async () => {
-    let requestCount = 0
-    mockFetch((requestUrl) => {
-      requestCount += 1
-      if (requestCount === 1) return new Response(null, { status: 503 })
-      return respondWithBookSearchPage(requestUrl)
-    })
+    mockBookSearchApiFailingOnce(respondWithBookSearchPage)
     const { user } = renderApp('/?q=테스트')
 
     expect(await screen.findByRole('alert')).toHaveTextContent(
@@ -157,7 +151,7 @@ describe('도서 검색 결과', () => {
 
   test('다음 목록을 불러오는 동안에는 불러오는 중임을 알린다', async () => {
     mockFetch((requestUrl) => {
-      if (getRequestedPage(requestUrl) === 2) return new Promise<Response>(() => {})
+      if (getRequestedPage(requestUrl) === 2) return respondPending()
       return respondWithBookSearchPage(requestUrl, 15)
     })
     const { user } = renderApp('/?q=테스트')
@@ -169,7 +163,7 @@ describe('도서 검색 결과', () => {
 
   test('다음 목록을 불러오는 동안에는 남은 책 수만큼 자리를 미리 그린다', async () => {
     mockFetch((requestUrl) => {
-      if (getRequestedPage(requestUrl) === 2) return new Promise<Response>(() => {})
+      if (getRequestedPage(requestUrl) === 2) return respondPending()
       return respondWithBookSearchPage(requestUrl, 15)
     })
     const { user } = renderApp('/?q=테스트')

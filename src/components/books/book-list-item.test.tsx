@@ -2,26 +2,45 @@ import { act, fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import { createBook } from '@/testing/data/books'
+import { mockAnimate } from '@/testing/mock-animate'
 import type { Book } from '@/types/book'
 
 import { toLargeThumbnailUrl } from './book-format'
 import { BookListItem } from './book-list-item'
 
+const LARGE_THUMBNAIL_URL = toLargeThumbnailUrl(createBook().thumbnailUrl ?? '')
+
 function renderBookListItem({ book = createBook(), isExpanded = false } = {}) {
   const handleToggleExpanded = vi.fn()
-  const { container } = render(
+  const renderItem = (nextIsExpanded: boolean) => (
     <BookListItem
       book={book}
-      isExpanded={isExpanded}
+      isExpanded={nextIsExpanded}
       onToggleExpanded={handleToggleExpanded}
       renderWishlistButton={() => <button type="button">찜하기</button>}
-    />,
+    />
   )
-  return { container, handleToggleExpanded }
+  const { container, rerender } = render(renderItem(isExpanded))
+  const changeExpanded = (nextIsExpanded: boolean) => rerender(renderItem(nextIsExpanded))
+  return { container, handleToggleExpanded, changeExpanded }
 }
 
 function renderExpanded(overrides: Partial<Book> = {}) {
   return renderBookListItem({ book: createBook(overrides), isExpanded: true })
+}
+
+function mockThumbnailWidths() {
+  vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockImplementation(function (
+    this: HTMLElement,
+  ) {
+    return this.closest('[data-expanded]') ? 210 : 48
+  })
+}
+
+function getThumbnail(container: HTMLElement) {
+  const thumbnail = container.querySelector('img')
+  if (!thumbnail) throw new Error('썸네일 이미지가 없습니다')
+  return thumbnail
 }
 
 function stubImagePreload() {
@@ -45,12 +64,9 @@ describe('BookListItem', () => {
       const isExpandedRow = this.querySelector('[data-expanded]') ?? this.closest('[data-expanded]')
       return isExpandedRow ? 344 : 100
     })
-    vi.stubGlobal('matchMedia', (query: string) => ({ matches: false, media: query }))
-    const book = createBook()
-    const props = { book, onToggleExpanded: vi.fn(), renderWishlistButton: () => null }
-    const { rerender } = render(<BookListItem {...props} isExpanded={false} />)
+    const { changeExpanded } = renderBookListItem()
 
-    rerender(<BookListItem {...props} isExpanded />)
+    changeExpanded(true)
 
     const drawer = screen.getByRole('article').parentElement
     expect(drawer?.style.height).toBe('344px')
@@ -73,25 +89,11 @@ describe('BookListItem', () => {
   })
 
   test('상세보기로 펼치면 표지가 작은 크기에서 큰 크기로 커지는 애니메이션을 한다', () => {
-    vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockImplementation(function (
-      this: HTMLElement,
-    ) {
-      return this.closest('[data-expanded]') ? 210 : 48
-    })
-    vi.stubGlobal('matchMedia', (query: string) => ({ matches: false, media: query }))
-    const animate = vi.fn(() => ({ cancel: vi.fn() }))
-    Object.defineProperty(HTMLElement.prototype, 'animate', { value: animate, configurable: true })
-    onTestFinished(() => {
-      Reflect.deleteProperty(HTMLElement.prototype, 'animate')
-    })
-    const props = {
-      book: createBook(),
-      onToggleExpanded: vi.fn(),
-      renderWishlistButton: () => null,
-    }
-    const { rerender } = render(<BookListItem {...props} isExpanded={false} />)
+    mockThumbnailWidths()
+    const animate = mockAnimate()
+    const { changeExpanded } = renderBookListItem()
 
-    rerender(<BookListItem {...props} isExpanded />)
+    changeExpanded(true)
 
     expect(animate).toHaveBeenCalledWith(
       [
@@ -103,25 +105,11 @@ describe('BookListItem', () => {
   })
 
   test('상세보기를 접을 때는 표지를 바로 작은 크기로 바꾼다', () => {
-    vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockImplementation(function (
-      this: HTMLElement,
-    ) {
-      return this.closest('[data-expanded]') ? 210 : 48
-    })
-    vi.stubGlobal('matchMedia', (query: string) => ({ matches: false, media: query }))
-    const animate = vi.fn(() => ({ cancel: vi.fn() }))
-    Object.defineProperty(HTMLElement.prototype, 'animate', { value: animate, configurable: true })
-    onTestFinished(() => {
-      Reflect.deleteProperty(HTMLElement.prototype, 'animate')
-    })
-    const props = {
-      book: createBook(),
-      onToggleExpanded: vi.fn(),
-      renderWishlistButton: () => null,
-    }
-    const { rerender } = render(<BookListItem {...props} isExpanded />)
+    mockThumbnailWidths()
+    const animate = mockAnimate()
+    const { changeExpanded } = renderBookListItem({ isExpanded: true })
 
-    rerender(<BookListItem {...props} isExpanded={false} />)
+    changeExpanded(false)
 
     expect(animate).not.toHaveBeenCalledWith(
       [
@@ -138,7 +126,7 @@ describe('BookListItem', () => {
 
     await userEvent.hover(screen.getByRole('button', { name: '상세보기' }))
 
-    expect(requestedImageUrls).toContain(toLargeThumbnailUrl(createBook().thumbnailUrl ?? ''))
+    expect(requestedImageUrls).toContain(LARGE_THUMBNAIL_URL)
   })
 
   test('상세보기에 키보드 포커스가 가도 큰 표지를 미리 받아 둔다', async () => {
@@ -149,7 +137,7 @@ describe('BookListItem', () => {
 
     act(() => toggleButton.focus())
 
-    expect(requestedImageUrls).toContain(toLargeThumbnailUrl(createBook().thumbnailUrl ?? ''))
+    expect(requestedImageUrls).toContain(LARGE_THUMBNAIL_URL)
   })
 
   test('구매하기를 누르면 새 탭으로 해당 책의 상세페이지로 이동한다', () => {
@@ -217,9 +205,3 @@ describe('BookListItem', () => {
     expect(container.querySelector('img')).not.toBeInTheDocument()
   })
 })
-
-function getThumbnail(container: HTMLElement) {
-  const thumbnail = container.querySelector('img')
-  if (!thumbnail) throw new Error('썸네일 이미지가 없습니다')
-  return thumbnail
-}
