@@ -5,6 +5,7 @@ import { Icon } from '@/components/ui/icon'
 import { useHeightTransition } from '@/hooks/use-height-transition'
 import type { Book } from '@/types/book'
 import { cn } from '@/utils/cn'
+import { preloadImage } from '@/utils/preload-image'
 
 import { formatPrice, getDisplayPrice, toLargeThumbnailUrl } from './book-format'
 
@@ -157,6 +158,10 @@ type BookActionsProps = {
 function BookActions({ book, isExpanded, descriptionId, onToggleExpanded }: BookActionsProps) {
   const hasDiscount = book.salePrice !== null
 
+  const preloadExpandedThumbnail = () => {
+    if (book.thumbnailUrl && !isExpanded) preloadImage(toLargeThumbnailUrl(book.thumbnailUrl))
+  }
+
   return (
     <div className={cn(ACTIONS_MOBILE_LAYOUT, ACTIONS_DESKTOP_LAYOUT)}>
       <p className="basis-full text-title3 text-fg-primary group-data-expanded:hidden lg:mr-14 lg:basis-auto">
@@ -190,6 +195,8 @@ function BookActions({ book, isExpanded, descriptionId, onToggleExpanded }: Book
         aria-expanded={isExpanded}
         aria-controls={descriptionId}
         onClick={onToggleExpanded}
+        onPointerEnter={preloadExpandedThumbnail}
+        onFocus={preloadExpandedThumbnail}
         className={buttonStyles({
           variant: 'secondary',
           className:

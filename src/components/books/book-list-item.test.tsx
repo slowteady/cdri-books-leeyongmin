@@ -1,9 +1,10 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { act, fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import { createBook } from '@/testing/data/books'
 import type { Book } from '@/types/book'
 
+import { toLargeThumbnailUrl } from './book-format'
 import { BookListItem } from './book-list-item'
 
 function renderBookListItem({ book = createBook(), isExpanded = false } = {}) {
@@ -21,6 +22,19 @@ function renderBookListItem({ book = createBook(), isExpanded = false } = {}) {
 
 function renderExpanded(overrides: Partial<Book> = {}) {
   return renderBookListItem({ book: createBook(overrides), isExpanded: true })
+}
+
+function stubImagePreload() {
+  const requestedImageUrls: string[] = []
+  vi.stubGlobal(
+    'Image',
+    class {
+      set src(url: string) {
+        requestedImageUrls.push(url)
+      }
+    },
+  )
+  return requestedImageUrls
 }
 
 describe('BookListItem', () => {
@@ -56,6 +70,26 @@ describe('BookListItem', () => {
 
     expect(screen.getByRole('heading', { level: 2, name: '노르웨이의 숲' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { level: 3, name: '책 소개' })).toBeInTheDocument()
+  })
+
+  test('상세보기에 마우스를 올리면 펼쳤을 때 쓸 큰 표지를 미리 받아 둔다', async () => {
+    const requestedImageUrls = stubImagePreload()
+    renderBookListItem()
+
+    await userEvent.hover(screen.getByRole('button', { name: '상세보기' }))
+
+    expect(requestedImageUrls).toContain(toLargeThumbnailUrl(createBook().thumbnailUrl ?? ''))
+  })
+
+  test('상세보기에 키보드 포커스가 가도 큰 표지를 미리 받아 둔다', async () => {
+    const requestedImageUrls = stubImagePreload()
+    renderBookListItem()
+
+    const toggleButton = screen.getByRole('button', { name: '상세보기' })
+
+    act(() => toggleButton.focus())
+
+    expect(requestedImageUrls).toContain(toLargeThumbnailUrl(createBook().thumbnailUrl ?? ''))
   })
 
   test('구매하기를 누르면 새 탭으로 해당 책의 상세페이지로 이동한다', () => {
