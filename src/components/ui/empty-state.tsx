@@ -6,7 +6,7 @@ type EmptyStateProps = {
 
 export function EmptyState({ message }: EmptyStateProps) {
   return (
-    <div className="flex flex-col items-center gap-6">
+    <div className="flex flex-col items-center gap-6 pt-21">
       <img src={bookEmptyImageUrl} alt="" width={80} height={80} />
       <p className="text-caption text-fg-secondary">{message}</p>
     </div>
