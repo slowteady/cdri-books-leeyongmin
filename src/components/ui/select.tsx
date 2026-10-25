@@ -4,8 +4,10 @@ import { useListboxNavigation } from '@/hooks/use-listbox-navigation'
 import { cn } from '@/utils/cn'
 
 import { Icon } from './icon'
+import { LISTBOX_OPTION } from './listbox-option-styles'
 
 const TRIGGER_LAYOUT = 'flex h-9 w-full cursor-pointer items-center justify-between px-2'
+const OPTION_LAYOUT = 'h-7.5 px-2 text-body2 leading-5.5'
 const TRIGGER_TEXT = 'border-b border-divider text-body2 leading-5 font-bold text-fg-primary'
 
 export type SelectOption<Value extends string> = {
@@ -97,7 +99,7 @@ export function Select<Value extends string>({
               role="option"
               aria-selected={option.value === highlightedOption?.value}
               onClick={() => selectOption(option)}
-              className="flex h-7.5 cursor-pointer items-center px-2 text-body2 leading-5.5 text-fg-subtitle aria-selected:text-fg-primary"
+              className={cn(LISTBOX_OPTION, OPTION_LAYOUT)}
             >
               {option.label}
             </li>

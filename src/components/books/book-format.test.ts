@@ -1,4 +1,9 @@
-import { formatPrice, getDisplayPrice, toLargeThumbnailUrl } from './book-format'
+import {
+  formatPrice,
+  getDisplayPrice,
+  getThumbnailUrlCandidates,
+  toLargeThumbnailUrl,
+} from './book-format'
 
 describe('getDisplayPrice', () => {
   test('할인가가 있으면 할인가, 없으면 원가를 목록 가격으로 쓴다', () => {
@@ -25,5 +30,24 @@ describe('toLargeThumbnailUrl', () => {
     expect(toLargeThumbnailUrl('https://example.com/cover.jpg')).toBe(
       'https://example.com/cover.jpg',
     )
+  })
+})
+
+describe('getThumbnailUrlCandidates', () => {
+  const thumbnailUrl = 'https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=cover'
+
+  test('펼치면 큰 표지를 먼저 쓰고, 실패하면 원래 표지를 쓴다', () => {
+    expect(getThumbnailUrlCandidates(thumbnailUrl, true)).toEqual([
+      toLargeThumbnailUrl(thumbnailUrl),
+      thumbnailUrl,
+    ])
+  })
+
+  test('접혀 있으면 원래 표지만 쓴다', () => {
+    expect(getThumbnailUrlCandidates(thumbnailUrl, false)).toEqual([thumbnailUrl])
+  })
+
+  test('표지가 없으면 쓸 주소가 없다', () => {
+    expect(getThumbnailUrlCandidates(null, true)).toEqual([])
   })
 })

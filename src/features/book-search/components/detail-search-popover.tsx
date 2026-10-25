@@ -13,7 +13,7 @@ import {
   type SearchTarget,
 } from '@/features/book-search/utils/search-mode'
 
-const DETAIL_QUERY_INPUT_CLASS_NAME =
+const DETAIL_QUERY_INPUT =
   'h-9 min-w-0 flex-1 border-b border-primary pr-2 pl-2.25 text-body2 leading-5.5 text-fg-primary outline-none placeholder:text-fg-subtitle'
 
 const SEARCH_TARGET_OPTIONS: SelectOption<SearchTarget>[] = SEARCH_TARGETS.map((searchTarget) => ({
@@ -65,7 +65,7 @@ export function DetailSearchPopover({
             placeholder="검색어 입력"
             onChange={(event) => detailSearchForm.changeQuery(event.target.value)}
             onKeyDown={handleQueryKeyDown}
-            className={DETAIL_QUERY_INPUT_CLASS_NAME}
+            className={DETAIL_QUERY_INPUT}
           />
         </div>
         <Button type="submit" size="md" className="mt-3.75 w-full">

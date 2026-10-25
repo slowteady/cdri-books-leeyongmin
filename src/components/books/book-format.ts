@@ -15,3 +15,8 @@ export function formatPrice(price: number | null) {
 export function toLargeThumbnailUrl(thumbnailUrl: string) {
   return thumbnailUrl.replace(KAKAO_THUMBNAIL_SIZE_PATTERN, KAKAO_LARGE_THUMBNAIL_SIZE)
 }
+
+export function getThumbnailUrlCandidates(thumbnailUrl: string | null, isExpanded: boolean) {
+  if (!thumbnailUrl) return []
+  return isExpanded ? [toLargeThumbnailUrl(thumbnailUrl), thumbnailUrl] : [thumbnailUrl]
+}

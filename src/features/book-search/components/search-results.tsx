@@ -1,5 +1,6 @@
-import { BookList, BookListSkeleton } from '@/components/books/book-list'
+import { BookList } from '@/components/books/book-list'
 import type { RenderWishlistButton } from '@/components/books/book-list-item'
+import { BookListSkeleton } from '@/components/books/book-list-skeleton'
 import { ResultCount } from '@/components/books/result-count'
 import { EmptyState } from '@/components/ui/empty-state'
 import { ErrorState } from '@/components/ui/error-state'

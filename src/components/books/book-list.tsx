@@ -2,12 +2,11 @@ import { useState } from 'react'
 
 import { Button } from '@/components/ui/button'
 import { ErrorState } from '@/components/ui/error-state'
-import { Skeleton } from '@/components/ui/skeleton'
 import { useIntersectionObserver } from '@/hooks/use-intersection-observer'
 import type { Book } from '@/types/book'
-import { cn } from '@/utils/cn'
 
 import { BookListItem, type RenderWishlistButton } from './book-list-item'
+import { BookListSkeleton } from './book-list-skeleton'
 
 type BookListProps = {
   books: Book[]
@@ -68,27 +67,5 @@ export function BookList({
         </div>
       )}
     </>
-  )
-}
-
-const SKELETON_ROW_MOBILE_LAYOUT = 'flex flex-wrap items-center gap-4 border-b border-divider py-4'
-const SKELETON_ROW_DESKTOP_LAYOUT = 'lg:h-25 lg:flex-nowrap lg:gap-12 lg:py-0 lg:pr-4 lg:pl-12'
-
-type BookListSkeletonProps = {
-  label: string
-  rowCount: number
-}
-
-export function BookListSkeleton({ label, rowCount }: BookListSkeletonProps) {
-  return (
-    <div role="status" aria-label={label}>
-      {Array.from({ length: rowCount }, (_, rowIndex) => (
-        <div key={rowIndex} className={cn(SKELETON_ROW_MOBILE_LAYOUT, SKELETON_ROW_DESKTOP_LAYOUT)}>
-          <Skeleton className="h-17 w-12 shrink-0" />
-          <Skeleton className="h-4.5 min-w-0 flex-1 rounded-lg" />
-          <Skeleton className="h-12 basis-full rounded-lg lg:w-60 lg:basis-auto" />
-        </div>
-      ))}
-    </div>
   )
 }
