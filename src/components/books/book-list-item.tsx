@@ -8,9 +8,9 @@ import { cn } from '@/utils/cn'
 import { formatPrice, getDisplayPrice, toLargeThumbnailUrl } from './book-format'
 
 const ITEM_MOBILE_LAYOUT = 'group flex flex-wrap items-start gap-4 border-b border-divider py-4'
-const ITEM_DESKTOP_LAYOUT = 'lg:flex-nowrap lg:items-center lg:gap-0 lg:pr-4 lg:pl-12'
+const ITEM_DESKTOP_LAYOUT = 'lg:flex-nowrap lg:items-center lg:gap-0 lg:pr-4 lg:pb-3.75 lg:pl-12'
 const ITEM_DESKTOP_EXPANDED_LAYOUT =
-  'lg:data-expanded:items-stretch lg:data-expanded:pt-6 lg:data-expanded:pb-10 lg:data-expanded:pl-13.5'
+  'lg:data-expanded:items-stretch lg:data-expanded:pt-6 lg:data-expanded:pb-9.75 lg:data-expanded:pl-13.5'
 
 type BookListItemProps = {
   book: Book
@@ -87,7 +87,7 @@ function BookThumbnail({ book, isExpanded, wishlistButton }: BookThumbnailProps)
       ) : (
         <div className="size-full bg-light-gray" />
       )}
-      <div className="absolute top-0 right-0 lg:group-data-expanded:top-2 lg:group-data-expanded:right-2">
+      <div className="absolute -top-1 -right-1 group-data-expanded:top-0 group-data-expanded:right-0 lg:group-data-expanded:top-2 lg:group-data-expanded:right-2">
         {wishlistButton}
       </div>
     </div>
@@ -152,7 +152,7 @@ function BookActions({ book, isExpanded, descriptionId, onToggleExpanded }: Book
       <p className="basis-full text-title3 text-fg-primary group-data-expanded:hidden lg:mr-14 lg:basis-auto">
         {formatPrice(getDisplayPrice(book))}
       </p>
-      <div className="hidden basis-full flex-col items-start gap-2 group-data-expanded:flex lg:basis-auto lg:items-end lg:group-data-expanded:mt-auto">
+      <div className="hidden basis-full flex-col items-start gap-2 group-data-expanded:flex lg:mr-1 lg:basis-auto lg:items-end lg:group-data-expanded:mt-auto">
         <PriceRow label="원가">
           <OriginalPrice price={book.originalPrice} hasDiscount={hasDiscount} />
         </PriceRow>
@@ -183,7 +183,7 @@ function BookActions({ book, isExpanded, descriptionId, onToggleExpanded }: Book
         className={buttonStyles({
           variant: 'secondary',
           className:
-            'flex-1 lg:ml-2 lg:w-28.75 lg:flex-none lg:group-data-expanded:order-first lg:group-data-expanded:ml-0',
+            'flex-1 lg:ml-2 lg:w-28.75 lg:flex-none lg:group-data-expanded:order-first lg:group-data-expanded:mt-0.5 lg:group-data-expanded:ml-0',
         })}
       >
         상세보기

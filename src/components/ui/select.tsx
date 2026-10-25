@@ -82,7 +82,7 @@ export function Select<Value extends string>({
           id={listboxId}
           role="listbox"
           aria-label={label}
-          className="absolute top-full left-0 z-10 w-full bg-white shadow-dropdown"
+          className="absolute top-full left-0 z-10 mt-1.5 w-full bg-white shadow-dropdown"
         >
           {selectableOptions.map((option) => (
             <li

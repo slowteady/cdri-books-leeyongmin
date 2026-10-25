@@ -45,7 +45,7 @@
 
   --container-content: 60rem;
 
-  --shadow-popover: 0 4px 14px rgb(151 151 151 / 0.15);
+  --shadow-popover: 0 4px 14px 6px rgb(151 151 151 / 0.15);
   --shadow-dropdown: 0 0 4px rgb(0 0 0 / 0.25);
 }
 
