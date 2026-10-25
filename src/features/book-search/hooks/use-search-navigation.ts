@@ -1,11 +1,10 @@
 import { useLocation, useSearchParams } from 'react-router'
 
-import {
-  toHistoryEntry,
-  useSearchHistoryActions,
-} from '@/features/book-search/stores/search-history-store'
+import { useSearchHistoryActions } from '@/features/book-search/stores/search-history-store'
+import { toHistoryEntry } from '@/features/book-search/utils/search-history-entry'
 import {
   parseSearchMode,
+  toDetailSearchCondition,
   toSearchParams,
   type ActiveSearchMode,
 } from '@/features/book-search/utils/search-mode'
@@ -21,5 +20,11 @@ export function useSearchNavigation() {
     setSearchParams(toSearchParams(nextSearchMode))
   }
 
-  return { searchMode, searchKey, search }
+  return {
+    searchMode,
+    searchKey,
+    allSearchQuery: searchMode.type === 'all' ? searchMode.query : '',
+    detailSearchCondition: toDetailSearchCondition(searchMode),
+    search,
+  }
 }

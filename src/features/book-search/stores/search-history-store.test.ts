@@ -1,8 +1,9 @@
+import type { SearchHistoryEntry } from '@/features/book-search/utils/search-history-entry'
+
 import {
   prependHistoryEntry,
   SEARCH_HISTORY_STORAGE_KEY,
   useSearchHistoryStore,
-  type SearchHistoryEntry,
 } from './search-history-store'
 
 function allSearchEntry(query: string): SearchHistoryEntry {

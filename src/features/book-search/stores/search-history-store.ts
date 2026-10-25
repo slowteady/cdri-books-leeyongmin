@@ -2,18 +2,10 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
 import { MAX_SEARCH_HISTORY_COUNT } from '@/config/constants'
-import {
-  isSearchTarget,
-  type ActiveSearchMode,
-  type SearchTarget,
-} from '@/features/book-search/utils/search-mode'
+import type { SearchHistoryEntry } from '@/features/book-search/utils/search-history-entry'
+import { isSearchTarget } from '@/features/book-search/utils/search-mode'
 
 export const SEARCH_HISTORY_STORAGE_KEY = 'cdri-books:search-history'
-
-export type SearchHistoryEntry = {
-  query: string
-  searchTarget: SearchTarget | null
-}
 
 function isSameHistoryEntry(entry: SearchHistoryEntry, otherEntry: SearchHistoryEntry) {
   return entry.query === otherEntry.query && entry.searchTarget === otherEntry.searchTarget
@@ -79,16 +71,3 @@ export const useSearchHistoryStore = create<SearchHistoryState>()(
 
 export const useSearchHistoryEntries = () => useSearchHistoryStore((state) => state.historyEntries)
 export const useSearchHistoryActions = () => useSearchHistoryStore((state) => state.actions)
-
-export function toSearchMode(entry: SearchHistoryEntry): ActiveSearchMode {
-  return entry.searchTarget
-    ? { type: 'detail', searchTarget: entry.searchTarget, query: entry.query }
-    : { type: 'all', query: entry.query }
-}
-
-export function toHistoryEntry(searchMode: ActiveSearchMode): SearchHistoryEntry {
-  return {
-    query: searchMode.query,
-    searchTarget: searchMode.type === 'detail' ? searchMode.searchTarget : null,
-  }
-}

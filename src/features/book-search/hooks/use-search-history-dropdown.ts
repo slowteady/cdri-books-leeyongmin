@@ -3,8 +3,8 @@ import { useState } from 'react'
 import {
   useSearchHistoryActions,
   useSearchHistoryEntries,
-  type SearchHistoryEntry,
 } from '@/features/book-search/stores/search-history-store'
+import type { SearchHistoryEntry } from '@/features/book-search/utils/search-history-entry'
 import { useListboxNavigation, type HighlightDirection } from '@/hooks/use-listbox-navigation'
 
 export function useSearchHistoryDropdown() {
@@ -37,7 +37,7 @@ export function useSearchHistoryDropdown() {
   return {
     historyEntries,
     isVisible,
-    highlightedIndex: listboxNavigation.highlightedIndex,
+    highlightedIndex: isVisible ? listboxNavigation.highlightedIndex : null,
     highlightedEntry,
     open: () => setIsOpen(true),
     close,
@@ -46,3 +46,5 @@ export function useSearchHistoryDropdown() {
     removeHighlightedEntry,
   }
 }
+
+export type SearchHistoryDropdown = ReturnType<typeof useSearchHistoryDropdown>

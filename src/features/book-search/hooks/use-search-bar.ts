@@ -1,23 +1,26 @@
 import { useState } from 'react'
 
-import type { SearchHistoryEntry } from '@/features/book-search/stores/search-history-store'
+import {
+  toSearchMode,
+  type SearchHistoryEntry,
+} from '@/features/book-search/utils/search-history-entry'
+import type { ActiveSearchMode } from '@/features/book-search/utils/search-mode'
 
-import { useSearchHistoryDropdown } from './use-search-history-dropdown'
+import type { SearchHistoryDropdown } from './use-search-history-dropdown'
 
 type UseSearchBarParams = {
   initialQuery: string
   searchKey: string
-  onSearch: (query: string) => void
-  onSelectHistoryEntry: (entry: SearchHistoryEntry) => void
+  historyDropdown: Pick<SearchHistoryDropdown, 'highlightedEntry' | 'close'>
+  onSearch: (searchMode: ActiveSearchMode) => void
 }
 
 export function useSearchBar({
   initialQuery,
   searchKey,
+  historyDropdown,
   onSearch,
-  onSelectHistoryEntry,
 }: UseSearchBarParams) {
-  const historyDropdown = useSearchHistoryDropdown()
   const [query, setQuery] = useState(initialQuery)
   const [syncedSearchKey, setSyncedSearchKey] = useState(searchKey)
 
@@ -28,8 +31,7 @@ export function useSearchBar({
 
   const selectHistoryEntry = (entry: SearchHistoryEntry) => {
     historyDropdown.close()
-    setQuery(entry.searchTarget ? '' : entry.query)
-    onSelectHistoryEntry(entry)
+    onSearch(toSearchMode(entry))
   }
 
   const confirmSelection = () => {
@@ -40,7 +42,7 @@ export function useSearchBar({
     const trimmedQuery = query.trim()
     if (!trimmedQuery) return
     historyDropdown.close()
-    onSearch(trimmedQuery)
+    onSearch({ type: 'all', query: trimmedQuery })
   }
 
   return {
@@ -48,6 +50,5 @@ export function useSearchBar({
     changeQuery: setQuery,
     confirmSelection,
     selectHistoryEntry,
-    historyDropdown,
   }
 }

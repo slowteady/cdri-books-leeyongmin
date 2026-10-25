@@ -3,26 +3,28 @@ import { useId, type KeyboardEvent, type MouseEvent } from 'react'
 import { Icon } from '@/components/ui/icon'
 import { IconButton } from '@/components/ui/icon-button'
 import { useSearchBar } from '@/features/book-search/hooks/use-search-bar'
-import type { SearchHistoryEntry } from '@/features/book-search/stores/search-history-store'
-import { SEARCH_TARGET_LABELS } from '@/features/book-search/utils/search-mode'
+import { useSearchHistoryDropdown } from '@/features/book-search/hooks/use-search-history-dropdown'
+import type { SearchHistoryEntry } from '@/features/book-search/utils/search-history-entry'
+import {
+  SEARCH_TARGET_LABELS,
+  type ActiveSearchMode,
+} from '@/features/book-search/utils/search-mode'
 
 type SearchBarProps = {
   initialQuery: string
   searchKey: string
-  onSearch: (query: string) => void
-  onSelectHistoryEntry: (entry: SearchHistoryEntry) => void
+  onSearch: (searchMode: ActiveSearchMode) => void
 }
 
-export function SearchBar({
-  initialQuery,
-  searchKey,
-  onSearch,
-  onSelectHistoryEntry,
-}: SearchBarProps) {
-  const searchBar = useSearchBar({ initialQuery, searchKey, onSearch, onSelectHistoryEntry })
-  const { historyDropdown } = searchBar
+export function SearchBar({ initialQuery, searchKey, onSearch }: SearchBarProps) {
+  const historyDropdown = useSearchHistoryDropdown()
+  const searchBar = useSearchBar({ initialQuery, searchKey, historyDropdown, onSearch })
   const historyListId = useId()
   const toHistoryOptionId = (index: number) => `${historyListId}-option-${index}`
+  const activeHistoryOptionId =
+    historyDropdown.highlightedIndex === null
+      ? undefined
+      : toHistoryOptionId(historyDropdown.highlightedIndex)
 
   const handleInputKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.nativeEvent.isComposing) return
@@ -61,11 +63,7 @@ export function SearchBar({
           aria-label="검색어"
           aria-expanded={historyDropdown.isVisible}
           aria-controls={historyListId}
-          aria-activedescendant={
-            historyDropdown.isVisible && historyDropdown.highlightedIndex !== null
-              ? toHistoryOptionId(historyDropdown.highlightedIndex)
-              : undefined
-          }
+          aria-activedescendant={activeHistoryOptionId}
           value={searchBar.query}
           placeholder="검색어를 입력하세요"
           onChange={(event) => searchBar.changeQuery(event.target.value)}

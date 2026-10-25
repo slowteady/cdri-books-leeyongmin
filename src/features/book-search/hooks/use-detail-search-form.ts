@@ -1,18 +1,21 @@
 import { useState } from 'react'
 
-import type { SearchTarget } from '@/features/book-search/utils/search-mode'
+import type {
+  ActiveSearchMode,
+  DetailSearchCondition,
+  SearchTarget,
+} from '@/features/book-search/utils/search-mode'
 
 const DEFAULT_SEARCH_TARGET: SearchTarget = 'title'
 
-export type DetailSearchCondition = {
-  searchTarget: SearchTarget
-  query: string
+function toDraftCondition(currentCondition: DetailSearchCondition | null): DetailSearchCondition {
+  return currentCondition ?? { searchTarget: DEFAULT_SEARCH_TARGET, query: '' }
 }
 
 type UseDetailSearchFormParams = {
   currentCondition: DetailSearchCondition | null
   searchKey: string
-  onSearch: (searchTarget: SearchTarget, query: string) => void
+  onSearch: (searchMode: ActiveSearchMode) => void
 }
 
 export function useDetailSearchForm({
@@ -21,32 +24,33 @@ export function useDetailSearchForm({
   onSearch,
 }: UseDetailSearchFormParams) {
   const [isOpen, setIsOpen] = useState(false)
-  const [searchTarget, setSearchTarget] = useState<SearchTarget>(
-    currentCondition?.searchTarget ?? DEFAULT_SEARCH_TARGET,
-  )
-  const [query, setQuery] = useState(currentCondition?.query ?? '')
+  const [draftCondition, setDraftCondition] = useState(() => toDraftCondition(currentCondition))
   const [syncedSearchKey, setSyncedSearchKey] = useState(searchKey)
 
   if (searchKey !== syncedSearchKey) {
     setSyncedSearchKey(searchKey)
-    setSearchTarget(currentCondition?.searchTarget ?? DEFAULT_SEARCH_TARGET)
-    setQuery(currentCondition?.query ?? '')
+    setDraftCondition(toDraftCondition(currentCondition))
   }
 
+  const changeSearchTarget = (searchTarget: SearchTarget) =>
+    setDraftCondition((condition) => ({ ...condition, searchTarget }))
+
+  const changeQuery = (query: string) => setDraftCondition((condition) => ({ ...condition, query }))
+
   const submit = () => {
-    const trimmedQuery = query.trim()
+    const trimmedQuery = draftCondition.query.trim()
     if (!trimmedQuery) return
     setIsOpen(false)
-    onSearch(searchTarget, trimmedQuery)
+    onSearch({ type: 'detail', searchTarget: draftCondition.searchTarget, query: trimmedQuery })
   }
 
   return {
     isOpen,
-    searchTarget,
-    query,
+    searchTarget: draftCondition.searchTarget,
+    query: draftCondition.query,
     changeOpen: setIsOpen,
-    changeSearchTarget: setSearchTarget,
-    changeQuery: setQuery,
+    changeSearchTarget,
+    changeQuery,
     submit,
   }
 }

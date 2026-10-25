@@ -13,6 +13,11 @@ export type SearchMode =
   | { type: 'all'; query: string }
   | { type: 'detail'; searchTarget: SearchTarget; query: string }
 
+export type DetailSearchCondition = {
+  searchTarget: SearchTarget
+  query: string
+}
+
 export function isSearchTarget(value: unknown): value is SearchTarget {
   return SEARCH_TARGETS.some((searchTarget) => searchTarget === value)
 }
@@ -29,6 +34,11 @@ export function parseSearchMode(searchParams: URLSearchParams): SearchMode {
 }
 
 export type ActiveSearchMode = Exclude<SearchMode, { type: 'idle' }>
+
+export function toDetailSearchCondition(searchMode: SearchMode): DetailSearchCondition | null {
+  if (searchMode.type !== 'detail') return null
+  return { searchTarget: searchMode.searchTarget, query: searchMode.query }
+}
 
 export function toSearchParams(searchMode: ActiveSearchMode) {
   const searchParams = new URLSearchParams({ [SEARCH_QUERY_PARAM]: searchMode.query })

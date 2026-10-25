@@ -4,13 +4,12 @@ import { Button } from '@/components/ui/button'
 import { buttonStyles } from '@/components/ui/button-styles'
 import { Popover } from '@/components/ui/popover'
 import { Select, type SelectOption } from '@/components/ui/select'
-import {
-  useDetailSearchForm,
-  type DetailSearchCondition,
-} from '@/features/book-search/hooks/use-detail-search-form'
+import { useDetailSearchForm } from '@/features/book-search/hooks/use-detail-search-form'
 import {
   SEARCH_TARGET_LABELS,
   SEARCH_TARGETS,
+  type ActiveSearchMode,
+  type DetailSearchCondition,
   type SearchTarget,
 } from '@/features/book-search/utils/search-mode'
 
@@ -22,7 +21,7 @@ const SEARCH_TARGET_OPTIONS: SelectOption<SearchTarget>[] = SEARCH_TARGETS.map((
 type DetailSearchPopoverProps = {
   currentCondition: DetailSearchCondition | null
   searchKey: string
-  onSearch: (searchTarget: SearchTarget, query: string) => void
+  onSearch: (searchMode: ActiveSearchMode) => void
 }
 
 export function DetailSearchPopover({
