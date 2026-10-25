@@ -1,13 +1,28 @@
+import type { ReactNode } from 'react'
 import { NavLink, Outlet, ScrollRestoration } from 'react-router'
 
 export function RootLayout() {
   return (
     <>
+      <AppShell>
+        <Outlet />
+      </AppShell>
+      <ScrollRestoration />
+    </>
+  )
+}
+
+type AppShellProps = {
+  children: ReactNode
+}
+
+export function AppShell({ children }: AppShellProps) {
+  return (
+    <>
       <Header />
       <main className="mx-auto box-content max-w-content px-4 pt-10 pb-20 lg:pt-20">
-        <Outlet />
+        {children}
       </main>
-      <ScrollRestoration />
     </>
   )
 }
