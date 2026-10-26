@@ -161,6 +161,18 @@ describe('검색창', () => {
     expect(screen.getByRole('listbox', { name: '최근 검색 기록' })).toBeInTheDocument()
   })
 
+  test('방향키로 기록을 고른 뒤 검색어를 고치면 고른 상태를 풀고 입력한 검색어로 검색한다', async () => {
+    mockBookSearchApi()
+    seedSearchHistory('바다', '숲')
+    const { router, user } = renderApp('/')
+    await user.click(await findSearchInput())
+    await user.keyboard('{ArrowDown}')
+
+    await user.type(getSearchInput(), '하늘{Enter}')
+
+    expect(router.state.location.search).toBe(`?q=${encodeURIComponent('하늘')}`)
+  })
+
   test('방향키로 고른 기록은 Delete 키로 지울 수 있다', async () => {
     seedSearchHistory('바다', '숲')
     const { user } = renderApp('/')

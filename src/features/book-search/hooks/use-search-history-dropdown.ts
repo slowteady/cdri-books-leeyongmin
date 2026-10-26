@@ -42,6 +42,7 @@ export function useSearchHistoryDropdown() {
     open: () => setIsOpen(true),
     close,
     moveHighlight,
+    resetHighlight: listboxNavigation.resetHighlight,
     removeHistoryEntry,
     removeHighlightedEntry,
   }

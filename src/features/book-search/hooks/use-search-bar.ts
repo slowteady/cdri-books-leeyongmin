@@ -11,7 +11,7 @@ import type { SearchHistoryDropdown } from './use-search-history-dropdown'
 type UseSearchBarParams = {
   initialQuery: string
   searchKey: string
-  historyDropdown: Pick<SearchHistoryDropdown, 'highlightedEntry' | 'close'>
+  historyDropdown: Pick<SearchHistoryDropdown, 'highlightedEntry' | 'close' | 'resetHighlight'>
   onSearch: (searchMode: ActiveSearchMode) => void
 }
 
@@ -27,6 +27,11 @@ export function useSearchBar({
   if (searchKey !== syncedSearchKey) {
     setSyncedSearchKey(searchKey)
     setQuery(initialQuery)
+  }
+
+  const changeQuery = (nextQuery: string) => {
+    setQuery(nextQuery)
+    historyDropdown.resetHighlight()
   }
 
   const selectHistoryEntry = (entry: SearchHistoryEntry) => {
@@ -47,7 +52,7 @@ export function useSearchBar({
 
   return {
     query,
-    changeQuery: setQuery,
+    changeQuery,
     confirmSelection,
     selectHistoryEntry,
   }
